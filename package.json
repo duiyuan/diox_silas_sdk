@@ -64,6 +64,7 @@
     "base64-arraybuffer": "1.0.2",
     "crc-32": "1.2.2",
     "dotenv": "^16.4.5",
+    "gm-crypto": "^0.1.12",
     "js-sha256": "0.10.1",
     "js-sha512": "0.8.0",
     "json-bigint": "1.0.0",
