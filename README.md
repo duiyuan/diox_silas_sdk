@@ -1,29 +1,30 @@
-# @silasjs/sdk
-@silasjs/sdk is a Nodejs SDK implementation of the [Silas RPC API](#)
+# @dioxide-js/silas
+
+@dioxide-js/silas is a Nodejs SDK implementation of the [Silas RPC API](#)
 
 ## Installation
 
 ### Using NPM
 
 ```bash
-npm install @silasjs/sdk
+npm install @dioxide-js/silas
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add @silasjs/sdk
+yarn add @dioxide-js/silas
 ```
 
 ## Getting Started
 
 ```js
-import { Web3, NET } from '@silasjs/sdk';
+import { Web3, NET } from '@dioxide-js/silas'
 
-const web3 = new Web3(NET.TEST);
+const web3 = new Web3(NET.TEST)
 
 // Get the balance of an address
-const balance = await web3.addr.getBalance('0x1234567890abcdef1234567890abcdef12345678');
+const balance = await web3.addr.getBalance('0x1234567890abcdef1234567890abcdef12345678')
 
 // Transfer dio
 const txnHash = await web3.txn.transfer({
@@ -46,34 +47,47 @@ const txnHash = await web3.txn.transferFCA({
 ### web3.addr
 
 #### web3.addr.getBalance(address: string)
+
 ```js
 const balance = await web3.addr.getBalance('eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2jmcdeb50j6es2xm')
 // '1000000000000000000000'
 ```
+
 #### web3.addr.getISN(address: string)
+
 ```js
 const isn = await web3.addr.getISN('eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2jmcdeb50j6es2xm')
 // 1
 ```
+
 #### web3.addr.getAddressTokens(address: string)
+
 ```js
-const tokens = await web3.addr.getAddressTokens('eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2jmcdeb50j6es2xm')
-[{
-  TokenID: '5789767',
-  Address: 'GXX:token',
-  Symbol: 'GXX',
-  TokenState: 0,
-  Decimals: 8,
-  Amount: '3018154202998548',
-  StateHeight: 294558
-}]
+const tokens = await web3.addr.getAddressTokens('eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2jmcdeb50j6es2xm')[
+  {
+    TokenID: '5789767',
+    Address: 'GXX:token',
+    Symbol: 'GXX',
+    TokenState: 0,
+    Decimals: 8,
+    Amount: '3018154202998548',
+    StateHeight: 294558,
+  }
+]
 ```
+
 #### web3.addr.getAddressTokenBalance(address: string, token: string)
+
 ```js
-const tokenbalance = await web3.addr.getAddressTokenBalance('eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2jmcdeb50j6es2xm', 'FXX')
+const tokenbalance = await web3.addr.getAddressTokenBalance(
+  'eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2jmcdeb50j6es2xm',
+  'FXX',
+)
 // '1000000000000000000000'
 ```
+
 #### web3.addr.getAddressInfo(address: string): [DIOX.AddressBaseInfo](#dioxaddressbaseinfo)
+
 ```js
 const info = await web3.addr.getAddressInfo('eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2jmcdeb50j6es2xm')
 {
@@ -98,7 +112,9 @@ const info = await web3.addr.getAddressInfo('eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5a
   }
 }
 ```
+
 #### web3.addr.getTxnListByAddress(params: [ListParmas](#listparmas)[]): [DIOX.TxSummary](#dioxtxsummary)[]
+
 ```js
 const txnList = await web3.addr.getTxnListByAddress({address: 'eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2jmcdeb50j6es2xm'})
 {
@@ -108,7 +124,9 @@ const txnList = await web3.addr.getTxnListByAddress({address: 'eqfkk71rg18mcjcp6
 ```
 
 ### web3.txn
+
 #### web3.txn.sign(txdata: [OriginalTxn](#originaltxn), secretKey: string)
+
 ```js
 const txn = await web3.txn.sign(
   {
@@ -130,7 +148,9 @@ const txn = await web3.txn.sign(
   hash: 'wkapenmgkqre483cg344a8bxstrq4nsj1matcdmtjna03tcmkc10'
 }
 ```
+
 #### web3.txn.send(originalTxn: [OriginalTxn](#originaltxn), secretKey: string)
+
 ```js
 const txHash = await web3.txn.send(
   {
@@ -148,31 +168,39 @@ const txHash = await web3.txn.send(
 )
 //wkapenmgkqre483cg344a8bxstrq4nsj1matcdmtjna03tcmkc10
 ```
+
 #### web3.txn.getTxn(hash: string): [DIOX.TxDetail](#dioxtxdetail)
+
 ```js
 const txn = await web3.txn.getTxn('wkapenmgkqre483cg344a8bxstrq4nsj1matcdmtjna03tcmkc10')
 //DIOX.TxDetail
 ```
+
 #### web3.txn.getEstimatedFee(originTxn: [OriginalTxn](#originaltxn))
+
 ```js
 const txn = await web3.txn.getEstimatedFee({
-    sender: '0x1234567890abcdef1234567890abcdef12345678:ed25519',
-    gasprice: 100,
-    function: 'core.wallet.transfer',
-    args: {
-      Amount: '10000000000',
-      To: '0x1234567890abcdef1234567890abcdef12345678:ed25519',
-      TokenId: 'FCA',
-    },
-  })
+  sender: '0x1234567890abcdef1234567890abcdef12345678:ed25519',
+  gasprice: 100,
+  function: 'core.wallet.transfer',
+  args: {
+    Amount: '10000000000',
+    To: '0x1234567890abcdef1234567890abcdef12345678:ed25519',
+    TokenId: 'FCA',
+  },
+})
 //95500
 ```
+
 #### web3.txn.sendRawTx(rawTxData: string)
+
 ```js
 const txnHash = await web3.txn.sendRawTx(base64rawData)
 //txnHash
 ```
+
 #### web3.txn.transfer({to: string, amount: string, secretKey: Unit8Array })
+
 ```js
 const txnHash = await web3.txn.transfer({
   to: '0x1234567890abcdef1234567890abcdef12345678:ed25519',
@@ -181,7 +209,9 @@ const txnHash = await web3.txn.transfer({
 })
 //txnHash
 ```
+
 #### web3.txn.transferFCA({to: string, amount: string, symbol: string, secretKey: Unit8Array })
+
 ```js
 const txnHash = await web3.txn.transferFCA({
   to: '0x1234567890abcdef1234567890abcdef12345678:ed25519',
@@ -191,29 +221,39 @@ const txnHash = await web3.txn.transferFCA({
 })
 //txnHash
 ```
+
 ### utils
 
 #### utils.generateAddress(targetShardIndex: number): { address: string, seed:Unit8Array }
+
 ```js
 const { address, seed } = utils.generateAddress(1)
 // address: qzysdapqk4q3442fx59y2ajnsbx5maz3d6japb7jngjrqq5xqddh60n420: ed25519
 ```
+
 #### utils.toTokenAmount(amount: string, decimals: number)
+
 ```js
 const isValid = utils.toTokenAmount('100000000', 8)
 //1
 ```
+
 #### utils.isValidAddress(address: string)
+
 ```js
 const isValid = utils.isValidAddress('qzysdapqk4q3442fx59y2ajnsbx5maz3d6japb7jngjrqq5xqddh60n420', 0)
 //true
 ```
+
 #### utils.extractPublicKey(address: string)
+
 ```js
 const shardIndex = utils.extractPublicKey('qzysdapqk4q3442fx59y2ajnsbx5maz3d6japb7jngjrqq5xqddh60n420', 0)
 //Unit8Array
 ```
+
 #### utils.addressToShard(address: string, shardOrder?: number)
+
 ```js
 const shardIndex = utils.addressToShard('qzysdapqk4q3442fx59y2ajnsbx5maz3d6japb7jngjrqq5xqddh60n420', 0)
 //0
@@ -222,6 +262,7 @@ const shardIndex = utils.addressToShard('qzysdapqk4q3442fx59y2ajnsbx5maz3d6japb7
 ## types
 
 ### DIOX.MetaData
+
 ```js
 interface MetaData {
     Description: string;
@@ -239,6 +280,7 @@ interface MetaData {
 ```
 
 ### DIOX.AddressBaseInfo
+
 ```js
 interface AddrBaseInfo {
     Address: string;
@@ -249,6 +291,7 @@ interface AddrBaseInfo {
 ```
 
 ### DIOX.TxSummary
+
 ```js
 interface TxSummary {
     Height: number;
@@ -269,6 +312,7 @@ interface TxSummary {
 ```
 
 ### DIOX.TxDetail
+
 ```js
 interface TxDetail {
     BlockTime: number;
@@ -302,6 +346,7 @@ interface TxDetail {
 ```
 
 ### OriginalTxn
+
 ```js
 interface OriginalTxn {
     gasprice: string | number;
@@ -319,6 +364,7 @@ interface OriginalTxn {
 ```
 
 ### ListParmas
+
 ```js
 interface ListParams {
   address: string
@@ -332,14 +378,14 @@ interface ListParams {
 
 ## Package.json Scripts
 
-| Script                         | Description                                                        |
-| ------------------------------ | ------------------------------------------------------------------ |
-| watch                          | Uses `tsc` to build all packages with watch mode                                  |
-| build                          | Uses `tsc` to build all packages                                    |
-| build:cjs                          | Uses `tsc` to build all packages to commonjs module                                   |
-| build:esm                          | Uses `tsc` to build all packages to es module                                    |
-| build:types                          | Uses `tsc` to build all packages to ts types                                    |
-| build:check                          | Uses `node` to check packages build                                    |
-| lint                           | Uses `eslint` to lint all packages                                 |
-| lint:fix                       | Uses `eslint` to check and fix any warnings                        |
-| test                           | Uses `jest` to run unit tests in each package                      |
+| Script      | Description                                         |
+| ----------- | --------------------------------------------------- |
+| watch       | Uses `tsc` to build all packages with watch mode    |
+| build       | Uses `tsc` to build all packages                    |
+| build:cjs   | Uses `tsc` to build all packages to commonjs module |
+| build:esm   | Uses `tsc` to build all packages to es module       |
+| build:types | Uses `tsc` to build all packages to ts types        |
+| build:check | Uses `node` to check packages build                 |
+| lint        | Uses `eslint` to lint all packages                  |
+| lint:fix    | Uses `eslint` to check and fix any warnings         |
+| test        | Uses `jest` to run unit tests in each package       |

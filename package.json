@@ -1,5 +1,5 @@
 {
-  "name": "@silasjs/sdk",
+  "name": "@dioxide-js/silas",
   "version": "0.0.13",
   "description": "RPC utility for Silas",
   "main": "./lib/commonjs/index.js",
