@@ -1,11 +1,8 @@
-import querystring from 'query-string'
-import json from 'json-bigint'
 import fetch, { Response, RequestInit } from 'node-fetch'
-import { shakeKeyValue, stringify } from '../utils/string'
+import { stringify } from '../utils/string'
 import provider from './provider'
 import { composeParams } from './rpc'
 
-const AbortController = globalThis.AbortController
 const TIMEOUT = 30 * 1000
 
 function checkStatus(response: Response) {

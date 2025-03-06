@@ -1,5 +1,5 @@
 import Request from './request'
-import { DIOX, TxDetailResponse } from './type'
+import { TxDetailResponse } from './type'
 
 export interface ExcutedTxCond {
   height: number
