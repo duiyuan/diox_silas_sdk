@@ -6,7 +6,9 @@ import base32Encode from 'base32-encode'
 import GenericAddress from './interface'
 
 const sm2 = smcrypto.sm2
-const sm3 = smcrypto.sm3
+const sm3 = (smcrypto as any).default.sm3
+
+console.log(typeof sm3)
 
 interface Options {
   privateKey?: string

@@ -12,9 +12,12 @@ export class DIOAddress {
 
   instance: GenericAddress | null = null
 
-  constructor(alg: Alg, privateKey: string) {
+  constructor(alg: Alg, privateKey?: string) {
     this.alg = alg
-    this.privateKey = dataview.hexToU8(privateKey)
+
+    if (privateKey) {
+      this.privateKey = dataview.hexToU8(privateKey)
+    }
 
     switch (alg) {
       case 'sm2':
@@ -26,11 +29,11 @@ export class DIOAddress {
   }
 
   generate() {
-    return this.instance?.generate()
+    return this.instance!.generate()
   }
 
   sign(content: string, privateKey: Uint8Array) {
-    return this.instance?.sign(content, privateKey)
+    return this.instance!.sign(content, privateKey)
   }
 
   verifySignature(msg: string, sigValueHex: string, publicKey: Uint8Array) {
