@@ -1,17 +1,10 @@
 import Request from './request'
-import { DioxScanChainBasicInfo } from './type'
+import { DIOX } from './type'
 
 class OverviewService extends Request {
   async chainStatus() {
-    const resp = await this.get<DioxScanChainBasicInfo>('', {
-      data: {
-        module: 'chain',
-        action: 'status',
-      },
-    })
-    const { Status, Message, Result } = resp
-    if (Status) throw Message
-    return Result
+    const resp = await this.post<DIOX.ChainStatus>('chain.status', {})
+    return resp
   }
 
   async getGasPrice() {

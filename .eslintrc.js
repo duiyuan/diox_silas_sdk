@@ -13,7 +13,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
-    indent: ['error', 2],
+    indent: ['off', 2],
     'prefer-const': 'off',
     'linebreak-style': 'off',
     '@typescript-eslint/no-var-requires': 'off',

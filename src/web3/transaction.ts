@@ -3,7 +3,7 @@ import { sha256 } from 'js-sha256'
 import * as ed from '@noble/ed25519'
 import base32Encode from 'base32-encode'
 
-import TransactionService, { ExcutedTxCond } from '../api/transactions'
+import TransactionService from '../api/transactions'
 import { concat, fullAddress, pk2Address } from '../utils'
 import { extractPublicKey } from '../utils'
 import PowDifficulty from '../utils/powDifficulty'
@@ -24,10 +24,7 @@ class Transaction {
   }
 
   private async compose(originalTxn: OriginalTxn) {
-    const { ret, err } = await this.txnServices.compose(JSON.stringify(originalTxn))
-    if (err) {
-      throw new Error(ret.toString())
-    }
+    const ret = await this.txnServices.compose(JSON.stringify(originalTxn))
     return ret.TxData
   }
 
@@ -59,26 +56,20 @@ class Transaction {
 
   async send(originTxn: OriginalTxn, secretKey: Uint8Array) {
     const { rawTxData: signData } = await this.sign(originTxn, secretKey)
-    const { ret, err } = await this.txnServices.sendTransaction(
+    const ret = await this.txnServices.sendTransaction(
       JSON.stringify({
         txdata: signData,
       }),
     )
-    if (err) {
-      throw new Error(ret.toString())
-    }
     return ret.Hash
   }
 
   async sendRawTx(rawTxData: string) {
-    const { ret, err } = await this.txnServices.sendTransaction(
+    const ret = await this.txnServices.sendTransaction(
       JSON.stringify({
         txdata: rawTxData,
       }),
     )
-    if (err) {
-      throw new Error(ret.toString())
-    }
     return ret.Hash
   }
 
@@ -105,7 +96,7 @@ class Transaction {
     const avgGasPrice = overview?.AvgGasPrice || 0
     const to = args.to || args.To
 
-    const { ret, err } = await this.txnServices.compose(
+    const ret = await this.txnServices.compose(
       JSON.stringify({
         sender: to,
         gasprice: avgGasPrice,
@@ -115,9 +106,6 @@ class Transaction {
         tokens,
       }),
     )
-    if (err) {
-      throw new Error('services.compose failed: txdata is empty(' + ret.toString() + ')')
-    }
 
     const gasLimit = ret.GasOffered.toString()
     const gasFee = this.calculateGasFee({
@@ -135,9 +123,9 @@ class Transaction {
     return gasFee
   }
 
-  getDepositTxByBlock(params: ExcutedTxCond) {
-    return this.txnServices.getDepositTx(params)
-  }
+  // getDepositTxByBlock(params: ExcutedTxCond) {
+  //   return this.txnServices.getDepositTx(params)
+  // }
 
   // async reclaimWallet({
   //   refund,

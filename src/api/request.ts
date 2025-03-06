@@ -1,10 +1,12 @@
 import querystring from 'query-string'
 import json from 'json-bigint'
 import fetch, { Response, RequestInit } from 'node-fetch'
-import { shakeKeyValue } from '../utils/string'
+import { shakeKeyValue, stringify } from '../utils/string'
 import provider from './provider'
+import { composeParams } from './rpc'
 
 const AbortController = globalThis.AbortController
+const TIMEOUT = 30 * 1000
 
 function checkStatus(response: Response) {
   if (response.ok) {
@@ -17,58 +19,43 @@ function checkStatus(response: Response) {
 export default class Fetcher {
   prune = (url: string) => (url.endsWith('/') ? url.slice(0, -1) : url)
 
-  get<T>(service: string, options: any): Promise<T> {
-    return new Promise((res) => {
-      const { dioxide } = provider.get()
-      options = { credentials: 'omit', ...options }
+  async postToBC<T>(action: string, payload: { [key: string]: any }): Promise<T> {
+    const { dioxide } = provider.get()
+    const body = composeParams(action, true, payload)
 
-      let absoluteUrl = service.startsWith('http') ? service : dioxide + service
+    const options: RequestInit = {
+      method: 'post',
+      body: stringify(body),
+      timeout: TIMEOUT,
+    }
+    const resp = await fetch(dioxide + '/api/jsonrpc/v1', options)
+      .then(checkStatus)
+      .then((r) => r.json())
 
-      if (options.data) {
-        const data = shakeKeyValue(options.data) || {}
-        absoluteUrl += '?' + querystring.stringify(data, { encode: false })
-      }
-
-      const controller = new AbortController()
-      options.signal = controller.signal
-      const timeout = setTimeout(() => {
-        controller.abort()
-      }, 30000)
-
-      fetch(absoluteUrl, options)
-        .then(checkStatus)
-        .then((r) => r.text().then((text) => res(json.parse(text))))
-        .finally(() => {
-          clearTimeout(timeout)
-        })
-    })
+    const { error, result } = resp
+    if (error) {
+      throw error.message
+    }
+    return result
   }
 
-  post<T>(service: string, options: any = {}): Promise<T> {
-    return new Promise((res) => {
-      const { dioxide } = provider.get()
-      const { body } = options
-      const absoluteUrl = service.startsWith('http')
-        ? service
-        : dioxide + (service.startsWith('/') ? service.slice(1) : service)
+  async post<T>(action: string, payload: any = {}, toBCRPC = false): Promise<T> {
+    const { dioxide } = provider.get()
+    const body = composeParams(action, false, payload)
 
-      const controller = new AbortController()
-      const concatOption: RequestInit = {
-        ...options,
-        method: 'post',
-        body,
-        signal: controller.signal,
-      }
-      const timeout = setTimeout(() => {
-        controller.abort()
-      }, 30000)
+    const options: RequestInit = {
+      method: 'post',
+      body: stringify(body),
+      timeout: TIMEOUT,
+    }
+    const resp = await fetch(dioxide + '/api/jsonrpc/v1', options)
+      .then(checkStatus)
+      .then((r) => r.json())
 
-      fetch(absoluteUrl, concatOption)
-        .then(checkStatus)
-        .then((r) => r.json().then((json) => res(json as T)))
-        .finally(() => {
-          clearTimeout(timeout)
-        })
-    })
+    const { error, result } = resp
+    if (error) {
+      throw error.message
+    }
+    return result
   }
 }

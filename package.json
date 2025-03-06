@@ -35,7 +35,8 @@
     "lint": "eslint --cache --cache-strategy content --ext .ts .",
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "test": "jest --clearCache && jest --config ./test/unit/jest.config.js",
-    "watch": "onchange \"src/**/*\" -e \"src/constants/version.ts\" -- yarn build"
+    "watch": "onchange \"src/**/*\" -e \"src/constants/version.ts\" -- yarn build",
+    "exmaple": "node exmaple/base.js"
   },
   "author": "dioxide",
   "license": "MIT",
@@ -67,7 +68,7 @@
     "gm-crypto": "^0.1.12",
     "js-sha256": "0.10.1",
     "js-sha512": "0.8.0",
-    "json-bigint": "1.0.0",
+    "json-bigint": "^1.0.0",
     "node-fetch": "2",
     "query-string": "7.1.1",
     "sha256": "0.2.0"
