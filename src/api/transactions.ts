@@ -8,12 +8,12 @@ export interface ExcutedTxCond {
 }
 
 class TransactionService extends Request {
-  compose(composed: string) {
-    return this.postToBC<{ TxData: string; GasOffered: number }>('tx.compose', { body: composed })
+  compose(composed: { [key: string]: any }) {
+    return this.postToBC<{ TxData: string; GasOffered: number }>('tx.compose', composed)
   }
 
-  sendTransaction(signedText: string) {
-    return this.post<{ Hash: string; Shard: number }>('tx.send', { body: signedText })
+  sendTransaction(signedText: { [key: string]: any }) {
+    return this.post<{ Hash: string; Shard: number }>('tx.send', signedText)
   }
 
   async getTransactionByHash(hash: string) {

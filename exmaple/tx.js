@@ -6,13 +6,13 @@ const web3 = new Web3('http://localhost:7600')
 
 const user_0 = {
   sk: 'e6a5622ce30c642e72ff164ca7a3f7509ea79ee2ec297df49684c5fb2b5e9208',
-  address: 'DWM1YCVFSA6D3VSRZNE5NQYW420QTP8KRXVBMDDCK8TYQQZVTAMP9P8Y54:SM2',
+  address: 'cctpwtsk12w2n2y3jwysfptq1y1az8dkm337w4rvv6sad2zayzqn8y3x4w:sm2',
   sk_b64: '5qViLOMMZC5y/xZMp6P3UJ6nnuLsKX30loTF+ytekgg=',
 }
 
 const user_1 = {
   sk: 'f4957aaeb86d36e5a5ef494244493b4e654ec2100c6533f37c92db5edc749e20',
-  address: 'K6HVH97ATMNSGJWWE0DNAWMTQ3QC72Y64V691TDWAGWQRYVTVW3E8WV23G:SM2',
+  address: 'k3sep2ac0e6bhz47drcs80a5fcmb13pkbf8jnvtqdy8hzycehd2k8mjjyw:sm2',
   sk_b64: '9JV6rrhtNuWl70lCREk7TmVOwhAMZTPzfJLbXtx0niA=',
 }
 

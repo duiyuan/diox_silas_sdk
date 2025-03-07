@@ -3,7 +3,7 @@ import { stringify } from '../utils/string'
 import provider from './provider'
 import { composeParams } from './rpc'
 
-const TIMEOUT = 30 * 1000
+const TIMEOUT = 30000 * 1000
 
 function checkStatus(response: Response) {
   if (response.ok) {

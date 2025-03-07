@@ -1,14 +1,13 @@
 import { decode, encode } from 'base64-arraybuffer'
 import { sha256 } from 'js-sha256'
-import * as ed from '@noble/ed25519'
 import base32Encode from 'base32-encode'
 
 import TransactionService from '../api/transactions'
-import { concat, DIOAddress, fullAddress, pk2Address } from '../utils'
-import { extractPublicKey } from '../utils'
+import { concat, DIOAddress } from '../utils'
 import PowDifficulty from '../utils/powDifficulty'
 import OverviewService from '../api/overview'
 import { OriginalTxn } from '../api/type'
+import { dataview } from '@dioxide-js/misc'
 
 class Transaction {
   private txnServices: TransactionService
@@ -24,24 +23,35 @@ class Transaction {
   }
 
   private async compose(originalTxn: OriginalTxn) {
-    const ret = await this.txnServices.compose(JSON.stringify(originalTxn))
+    const ret = await this.txnServices.compose(originalTxn)
     return ret.TxData
   }
 
   async sign(originalTxn: OriginalTxn, secretKey: Uint8Array) {
-    const unit8ArraySecrectKey = secretKey
+    const dioAddress = new DIOAddress('sm2', secretKey)
     const txdata = await this.compose(originalTxn)
-    const pk = extractPublicKey(originalTxn.sender)
+
+    let pk: Uint8Array | null = null
+
+    if (dioAddress.alg === 'sm2') {
+      pk = dioAddress.getPubicKeyFromPrivateKey(secretKey)
+      pk = dataview.concat(new Uint8Array([4]), pk)
+    } else {
+      pk = dioAddress.addressToPublicKey(originalTxn.sender)
+    }
     if (!pk) {
       throw new Error('pk error')
     }
-    const dataWithPK = this.insertPK(txdata, [{ encryptedMethodOrderNumber: 0x3, publicKey: new Uint8Array(pk) }])
-    const signedInfo = await ed.sign(dataWithPK, unit8ArraySecrectKey)
-    const isValid = await ed.verify(signedInfo, dataWithPK, pk)
+    const dataWithPK = dioAddress.insertPKIntoTxData(txdata, [
+      { encryptedMethodOrderNumber: dioAddress.methodNum, publicKey: pk },
+    ])
+    const signedInfo = await dioAddress.sign(dataWithPK, secretKey)
+    const isValid = await dioAddress.verifySignature(dataWithPK, signedInfo, pk)
     if (!isValid) {
       throw new Error('sign error')
     }
-    const finalInfo = concat(dataWithPK, signedInfo)
+    const tail = dataview.hexToU8(signedInfo)
+    const finalInfo = dataview.concat(dataWithPK, tail)
     const powDiff = new PowDifficulty({
       originTxn: finalInfo.buffer,
       ttl: originalTxn.ttl,
@@ -56,20 +66,16 @@ class Transaction {
 
   async send(originTxn: OriginalTxn, secretKey: Uint8Array) {
     const { rawTxData: signData } = await this.sign(originTxn, secretKey)
-    const ret = await this.txnServices.sendTransaction(
-      JSON.stringify({
-        txdata: signData,
-      }),
-    )
+    const ret = await this.txnServices.sendTransaction({
+      txdata: signData,
+    })
     return ret.Hash
   }
 
   async sendRawTx(rawTxData: string) {
-    const ret = await this.txnServices.sendTransaction(
-      JSON.stringify({
-        txdata: rawTxData,
-      }),
-    )
+    const ret = await this.txnServices.sendTransaction({
+      txdata: rawTxData,
+    })
     return ret.Hash
   }
 
@@ -96,16 +102,14 @@ class Transaction {
     const avgGasPrice = overview?.AvgGasPrice || 0
     const to = args.to || args.To
 
-    const ret = await this.txnServices.compose(
-      JSON.stringify({
-        sender: to,
-        gasprice: avgGasPrice,
-        delegatee: delegatee,
-        function: func,
-        args,
-        tokens,
-      }),
-    )
+    const ret = await this.txnServices.compose({
+      sender: to,
+      gasprice: avgGasPrice,
+      delegatee: delegatee,
+      function: func,
+      args,
+      tokens,
+    })
 
     const gasLimit = ret.GasOffered.toString()
     const gasFee = this.calculateGasFee({
