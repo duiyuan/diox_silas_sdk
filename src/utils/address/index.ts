@@ -1,5 +1,3 @@
-import { dataview } from '@dioxide-js/misc'
-
 import GenericAddress from './interface'
 import DIOSM2 from './sm2'
 
@@ -12,17 +10,18 @@ export class DIOAddress {
 
   instance: GenericAddress | null = null
 
-  constructor(alg: Alg, privateKey?: string) {
+  constructor(alg: Alg, privateKey?: Uint8Array) {
     this.alg = alg
 
     if (privateKey) {
-      this.privateKey = dataview.hexToU8(privateKey)
+      this.privateKey = privateKey
     }
 
     switch (alg) {
       case 'sm2':
         this.instance = new DIOSM2({ privateKey: privateKey })
         break
+      case 'ed25519':
       default:
         throw 'DIOAddress ERROR: unsupported alg:' + this.alg
     }

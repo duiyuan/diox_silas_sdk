@@ -4,7 +4,7 @@ import * as ed from '@noble/ed25519'
 import base32Encode from 'base32-encode'
 
 import TransactionService from '../api/transactions'
-import { concat, fullAddress, pk2Address } from '../utils'
+import { concat, DIOAddress, fullAddress, pk2Address } from '../utils'
 import { extractPublicKey } from '../utils'
 import PowDifficulty from '../utils/powDifficulty'
 import OverviewService from '../api/overview'
@@ -206,9 +206,12 @@ class Transaction {
   }
 
   private async sk2base32Address(sk: Uint8Array) {
-    const pk = await ed.getPublicKey(sk)
-    const { address } = pk2Address(pk)
-    return fullAddress(base32Encode(address, 'Crockford').toLocaleLowerCase())
+    // const pk = await ed.getPublicKey(sk)
+    // const { address } = pk2Address(pk)
+    // return fullAddress(base32Encode(address, 'Crockford').toLocaleLowerCase())
+    const dioAddress = new DIOAddress('sm2', sk)
+    const { address } = await dioAddress.generate()
+    return address.toLowerCase()
   }
 }
 

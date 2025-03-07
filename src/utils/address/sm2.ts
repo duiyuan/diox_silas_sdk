@@ -4,14 +4,13 @@ import crc32c from 'crc-32/crc32c.js'
 import base32Encode from 'base32-encode'
 
 import GenericAddress from './interface'
+import sha256 from 'sha256'
 
 const sm2 = smcrypto.sm2
 const sm3 = (smcrypto as any).default.sm3
 
-console.log(typeof sm3)
-
 interface Options {
-  privateKey?: string
+  privateKey?: Uint8Array
 }
 
 export default class DIOSM2 implements GenericAddress {
@@ -19,7 +18,11 @@ export default class DIOSM2 implements GenericAddress {
 
   constructor(options?: Options) {
     if (options?.privateKey) {
-      this.privateKey = this.trim(options?.privateKey)
+      const { privateKey } = options
+      if (!(privateKey instanceof Uint8Array)) {
+        throw `Illegal privatekey, expect Uint8Array`
+      }
+      this.privateKey = dataview.u8ToHex(options.privateKey) //this.trim(options?.privateKey)
     }
   }
 
@@ -34,9 +37,11 @@ export default class DIOSM2 implements GenericAddress {
 
     const pku8 = publickKeyU8[0] === 4 ? publickKeyU8.slice(1) : publickKeyU8
     const pkHash = sm3(pku8)
+    // const u8 = sha256(pku8 as any, { asBytes: true })
+    // const u = new Uint8Array(u8)
     const u8 = dataview.hexToU8(pkHash)
     const o = this.pkToDIOStruct(u8, 4)
-    const address = base32Encode(o.address, 'Crockford')
+    const address = base32Encode(o.address, 'Crockford').toLowerCase() + ':sm2'
     return { pk, sk, pku8: publickKeyU8, sku8, address }
   }
 
