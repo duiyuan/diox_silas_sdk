@@ -24,10 +24,9 @@ signEd25519Txn()
 
 async function generateAddress(privatekey) {
   const sk_u8 = dataview.hexToU8(privatekey)
-  const sk_b64 = fromByteArray(sk_u8)
 
-  const { sk, pk, address } = await new DIOAddress('ed25519', sk_u8).generate()
-  return { sk, pk, address, sk_u8 }
+  const { sk, pk, address, sku8 } = await new DIOAddress('ed25519', sk_u8).generate()
+  return { sk, pk, address, sk_u8: sku8 }
 }
 
 async function signTxn() {
