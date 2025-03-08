@@ -1,10 +1,10 @@
 import { decode } from 'base64-arraybuffer'
-import { dataview } from '@dioxide-js/misc'
 import base32Decode from 'base32-decode'
 import crc32c from 'crc-32/crc32c'
 
-import GenericAddress from './interface'
 import DIOSM2 from './sm2'
+import DIOEd25519 from './ed25519'
+import GenericAddress from './base'
 import { areUint8ArraysEqual, concat } from '../buffer'
 
 type Alg = 'sm2' | 'ed25519'
@@ -19,7 +19,6 @@ export class DIOAddress {
   methodNum = 0x4
 
   privateKey: Uint8Array | null = null
-
   instance: GenericAddress | null = null
 
   constructor(alg: Alg, privateKey?: Uint8Array) {
@@ -36,8 +35,8 @@ export class DIOAddress {
         break
       case 'ed25519':
         this.methodNum = 0x3
-        // this.instance = new DIOEd25519({ privateKey: privateKey })
-        throw 'DIOAddress ERROR: unsupported alg:' + this.alg
+        this.instance = new DIOEd25519({ privateKey: privateKey })
+        break
       default:
         throw 'DIOAddress ERROR: unsupported alg:' + this.alg
     }

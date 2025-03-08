@@ -4,7 +4,7 @@ import crc32c from 'crc-32/crc32c.js'
 import base32Encode from 'base32-encode'
 import sha256 from 'sha256'
 
-import GenericAddress from './interface'
+import GenericAddress from './base'
 
 const sm2 = smcrypto.sm2
 const sm3 = (smcrypto as any).default.sm3
@@ -26,8 +26,8 @@ export default class DIOSM2 implements GenericAddress {
     }
   }
 
-  generate(algHash: 'sm3' | 'sha256' = 'sha256') {
-    const [pk, sk] = this.keyPaires() as [string, string]
+  async generate(algHash: 'sm3' | 'sha256' = 'sha256') {
+    const [pk, sk] = await this.keyPaires()
     const publickKeyU8 = dataview.hexToU8(pk!)
     const sku8 = dataview.hexToU8(sk!)
 
@@ -36,7 +36,8 @@ export default class DIOSM2 implements GenericAddress {
 
     const o = this.pkToDIOStruct(u8, 4)
     const address = base32Encode(o.address, 'Crockford').toLowerCase() + ':sm2'
-    return { pk, sk, pku8: publickKeyU8, sku8, address }
+    const ret = { pk, sk, pku8: publickKeyU8, sku8, address }
+    return Promise.resolve(ret)
   }
 
   hash(publicKey: Uint8Array, algHash: 'sm3' | 'sha256' = 'sha256') {
@@ -52,14 +53,14 @@ export default class DIOSM2 implements GenericAddress {
     throw 'unknown hash alg:' + algHash
   }
 
-  getPubicKeyFromPrivateKey(privateKeyHex: string | Uint8Array): Uint8Array {
+  getPubicKeyFromPrivateKey(privateKeyHex: string | Uint8Array) {
     if (privateKeyHex instanceof Uint8Array) {
       privateKeyHex = dataview.u8ToHex(privateKeyHex)
     }
     const publicKey = (sm2 as any).getPublicKeyFromPrivateKey(privateKeyHex)
     const publickKeyU8 = dataview.hexToU8(publicKey)
     const pku8 = publickKeyU8[0] === 4 ? publickKeyU8.slice(1) : publickKeyU8
-    return pku8
+    return Promise.resolve(pku8)
   }
 
   private pkToDIOStruct(
@@ -90,13 +91,13 @@ export default class DIOSM2 implements GenericAddress {
     return address
   }
 
-  private keyPaires() {
+  private async keyPaires() {
     let publicKey = ''
     let privateKey = ''
 
     if (this.privateKey) {
       privateKey = this.privateKey
-      const pk = this.getPubicKeyFromPrivateKey(privateKey)
+      const pk = await this.getPubicKeyFromPrivateKey(privateKey)
       publicKey = dataview.u8ToHex(pk)
     } else {
       const { publicKey: pk, privateKey: sk } = sm2.generateKeyPairHex()
@@ -107,20 +108,22 @@ export default class DIOSM2 implements GenericAddress {
     return [publicKey, privateKey]
   }
 
-  sign(content: string | Uint8Array | number[], privateKey: Uint8Array) {
+  sign(content: string | Uint8Array | number[], privateKey: Uint8Array): Promise<Uint8Array> {
     const sk = dataview.u8ToHex(privateKey)
     if (content instanceof Uint8Array) {
       content = Array.from(content)
     }
     const signature = sm2.doSignature(content, sk)
-    return signature
+    const ret = dataview.hexToU8(signature)
+    return Promise.resolve(ret)
   }
 
-  verify(msg: string | Uint8Array | number[], sigValueHex: string, publicKey: Uint8Array) {
+  verify(msg: string | Uint8Array | number[], sigValueHex: string, publicKey: Uint8Array): Promise<boolean> {
     const pk = dataview.u8ToHex(publicKey)
     if (msg instanceof Uint8Array) {
       msg = Array.from(msg)
     }
-    return sm2.doVerifySignature(msg, sigValueHex, pk)
+    const ret = sm2.doVerifySignature(msg, sigValueHex, pk)
+    return Promise.resolve(ret)
   }
 }

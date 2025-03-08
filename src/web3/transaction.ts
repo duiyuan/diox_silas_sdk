@@ -9,6 +9,8 @@ import OverviewService from '../api/overview'
 import { OriginalTxn } from '../api/type'
 import { dataview } from '@dioxide-js/misc'
 
+const TEST_ALG = 'ed25519'
+
 class Transaction {
   private txnServices: TransactionService
   private overViewServices: OverviewService
@@ -28,13 +30,13 @@ class Transaction {
   }
 
   async sign(originalTxn: OriginalTxn, secretKey: Uint8Array) {
-    const dioAddress = new DIOAddress('sm2', secretKey)
+    const dioAddress = new DIOAddress(TEST_ALG, secretKey)
     const txdata = await this.compose(originalTxn)
 
     let pk: Uint8Array | null = null
 
     if (dioAddress.alg === 'sm2') {
-      pk = dioAddress.getPubicKeyFromPrivateKey(secretKey)
+      pk = await dioAddress.getPubicKeyFromPrivateKey(secretKey)
       pk = dataview.concat(new Uint8Array([4]), pk)
     } else {
       pk = dioAddress.addressToPublicKey(originalTxn.sender)
@@ -46,12 +48,12 @@ class Transaction {
       { encryptedMethodOrderNumber: dioAddress.methodNum, publicKey: pk },
     ])
     const signedInfo = await dioAddress.sign(dataWithPK, secretKey)
-    const isValid = await dioAddress.verifySignature(dataWithPK, signedInfo, pk)
+    const signature = dataview.u8ToHex(signedInfo)
+    const isValid = await dioAddress.verifySignature(dataWithPK, signature, pk)
     if (!isValid) {
       throw new Error('sign error')
     }
-    const tail = dataview.hexToU8(signedInfo)
-    const finalInfo = dataview.concat(dataWithPK, tail)
+    const finalInfo = dataview.concat(dataWithPK, signedInfo)
     const powDiff = new PowDifficulty({
       originTxn: finalInfo.buffer,
       ttl: originalTxn.ttl,
@@ -65,7 +67,8 @@ class Transaction {
   }
 
   async send(originTxn: OriginalTxn, secretKey: Uint8Array) {
-    const { rawTxData: signData } = await this.sign(originTxn, secretKey)
+    const { rawTxData: signData, hash } = await this.sign(originTxn, secretKey)
+    console.log('computed hash =>', hash)
     const ret = await this.txnServices.sendTransaction({
       txdata: signData,
     })
@@ -77,23 +80,6 @@ class Transaction {
       txdata: rawTxData,
     })
     return ret.Hash
-  }
-
-  private insertPK(
-    txData: string,
-    pkList: { encryptedMethodOrderNumber: number; publicKey: Uint8Array }[],
-  ): Uint8Array {
-    const originTxData = new Uint8Array(decode(txData))
-
-    const secSuites: Uint8Array[] = []
-    pkList.forEach((el) => {
-      const id = new Uint8Array([el.encryptedMethodOrderNumber])
-      const pk = el.publicKey
-      secSuites.push(id)
-      secSuites.push(pk)
-    })
-    const result = concat(originTxData, ...secSuites)
-    return result
   }
 
   async getEstimatedFee(originTxn: OriginalTxn) {
@@ -163,7 +149,7 @@ class Transaction {
   // }
 
   async transfer({ to, amount, secretKey, ttl }: { to: string; amount: string; secretKey: Uint8Array; ttl?: number }) {
-    const sender = await this.sk2base32Address(secretKey)
+    const sender = await this.sk2base32Address(secretKey, TEST_ALG)
     return this.send(
       {
         sender,
@@ -192,7 +178,7 @@ class Transaction {
     secretKey: Uint8Array
     ttl?: number
   }) {
-    const sender = await this.sk2base32Address(secretKey)
+    const sender = await this.sk2base32Address(secretKey, TEST_ALG)
     return this.send(
       {
         sender,
@@ -209,11 +195,11 @@ class Transaction {
     )
   }
 
-  private async sk2base32Address(sk: Uint8Array) {
+  private async sk2base32Address(sk: Uint8Array, alg: 'sm2' | 'ed25519') {
     // const pk = await ed.getPublicKey(sk)
     // const { address } = pk2Address(pk)
     // return fullAddress(base32Encode(address, 'Crockford').toLocaleLowerCase())
-    const dioAddress = new DIOAddress('sm2', sk)
+    const dioAddress = new DIOAddress(alg, sk)
     const { address } = await dioAddress.generate()
     return address.toLowerCase()
   }
