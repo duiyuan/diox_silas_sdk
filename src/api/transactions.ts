@@ -1,5 +1,5 @@
 import Request from './request'
-import { TxDetailResponse } from './type'
+import { OriginalTxn, TxDetailResponse } from './type'
 
 export interface ExcutedTxCond {
   height: number
@@ -21,6 +21,20 @@ class TransactionService extends Request {
       hash,
     })
     return resp
+  }
+
+  sign(privateKey: string, txdata: string) {
+    return this.postToBC<{ TxData: string }>('tx.sign', {
+      sk: [privateKey],
+      txdata,
+    })
+  }
+
+  sendTxWithPrivateKey(privateKey: string, params: OriginalTxn) {
+    return this.post<{ Hash: string }>('tx.send', {
+      privatekey: privateKey,
+      ...params,
+    })
   }
 }
 

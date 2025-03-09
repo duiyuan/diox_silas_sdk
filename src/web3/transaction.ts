@@ -11,6 +11,21 @@ import { dataview } from '@dioxide-js/misc'
 
 const TEST_ALG = 'ed25519'
 
+export interface TransferDIOParams {
+  to: string
+  amount: string
+  secretKey: Uint8Array
+  ttl?: number
+}
+
+export interface TransferFCAParams {
+  symbol: string
+  to: string
+  amount: string
+  secretKey: Uint8Array
+  ttl?: number
+}
+
 class Transaction {
   private txnServices: TransactionService
   private overViewServices: OverviewService
@@ -66,9 +81,15 @@ class Transaction {
     }
   }
 
-  async send(originTxn: OriginalTxn, secretKey: Uint8Array) {
+  async send(originTxn: OriginalTxn, secretKey: Uint8Array, composeOnRemote = true) {
+    if (composeOnRemote) {
+      const privatekey = encode(secretKey)
+      const resp = await this.txnServices.sendTxWithPrivateKey(privatekey, originTxn)
+      console.log('hash =>', resp.Hash)
+      return resp.Hash
+    }
     const { rawTxData: signData, hash } = await this.sign(originTxn, secretKey)
-    console.log('computed hash =>', hash)
+    console.log('hash =>', hash)
     const ret = await this.txnServices.sendTransaction({
       txdata: signData,
     })
@@ -148,7 +169,8 @@ class Transaction {
   //   )
   // }
 
-  async transfer({ to, amount, secretKey, ttl }: { to: string; amount: string; secretKey: Uint8Array; ttl?: number }) {
+  async transfer(params: TransferDIOParams) {
+    const { to, amount, secretKey, ttl } = params
     const sender = await this.sk2base32Address(secretKey, TEST_ALG)
     return this.send(
       {
@@ -165,19 +187,8 @@ class Transaction {
     )
   }
 
-  async transferFCA({
-    symbol,
-    to,
-    amount,
-    secretKey,
-    ttl,
-  }: {
-    symbol: string
-    to: string
-    amount: string
-    secretKey: Uint8Array
-    ttl?: number
-  }) {
+  async transferFCA(params: TransferFCAParams) {
+    const { symbol, to, amount, secretKey, ttl } = params
     const sender = await this.sk2base32Address(secretKey, TEST_ALG)
     return this.send(
       {
