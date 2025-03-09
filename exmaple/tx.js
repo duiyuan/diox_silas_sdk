@@ -1,3 +1,5 @@
+// https://const.net.cn/tool/sm2/genkey/
+
 const { Web3, DIOAddress } = require('../lib/commonjs/index.js')
 const { fromByteArray, toByteArray } = require('base64-js')
 const { dataview } = require('@dioxide-js/misc')
@@ -16,7 +18,7 @@ const user_1 = {
   sk_b64: '9JV6rrhtNuWl70lCREk7TmVOwhAMZTPzfJLbXtx0niA=',
 }
 
-signEd25519Txn()
+signTxn()
   .then((rsp) => {
     console.log(rsp)
   })
