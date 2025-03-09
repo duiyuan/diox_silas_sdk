@@ -9,8 +9,11 @@ export interface AddressGenerated {
 }
 
 export type Hex = string
+export type EncryptMethod = 'ed25519' | 'sm2' | 'ecdsa'
 
 export default abstract class GenericAddress {
+  abstract encryptMethod: EncryptMethod
+  abstract encryptOrderNum: number
   abstract getPubicKeyFromPrivateKey(privateKeyHex: string | Uint8Array): Promise<Uint8Array>
   abstract generate(): Promise<AddressGenerated>
   abstract sign(content: string | number[] | Uint8Array, privateKey: Uint8Array): Promise<Uint8Array>

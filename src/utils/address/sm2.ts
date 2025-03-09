@@ -4,7 +4,7 @@ import crc32c from 'crc-32/crc32c.js'
 import base32Encode from 'base32-encode'
 import sha256 from 'sha256'
 
-import GenericAddress from './base'
+import GenericAddress, { EncryptMethod } from './base'
 
 const sm2 = smcrypto.sm2
 const sm3 = (smcrypto as any).default.sm3
@@ -15,6 +15,9 @@ interface Options {
 
 export default class DIOSM2 implements GenericAddress {
   private privateKey?: string
+
+  encryptMethod: EncryptMethod = 'sm2'
+  encryptOrderNum = 4
 
   constructor(options?: Options) {
     if (options?.privateKey) {
@@ -34,7 +37,7 @@ export default class DIOSM2 implements GenericAddress {
     const pku8 = publickKeyU8[0] === 4 ? publickKeyU8.slice(1) : publickKeyU8
     const u8 = this.hash(pku8, algHash)
 
-    const o = this.pkToDIOStruct(u8, 4)
+    const o = this.pkToDIOStruct(u8)
     const address = base32Encode(o.address, 'Crockford').toLowerCase() + ':sm2'
     const ret = { pk, sk, pku8: publickKeyU8, sku8, address }
     return Promise.resolve(ret)
@@ -63,16 +66,11 @@ export default class DIOSM2 implements GenericAddress {
     return Promise.resolve(pku8)
   }
 
-  private pkToDIOStruct(
-    publicKey: Uint8Array,
-    rollingCRC = 4,
-    encryptMethod = 0x4, // ed25519 -> 3, sm2 -> 4
-    salt = 1,
-    alias?: string,
-  ) {
-    let errorCorrectingCode = crc32c.buf(publicKey, rollingCRC)
-    console.log(errorCorrectingCode, rollingCRC)
-    errorCorrectingCode = (errorCorrectingCode & 0xfffffff0) | encryptMethod
+  private pkToDIOStruct(publicKey: Uint8Array, salt = 1, alias?: string) {
+    const order = this.encryptOrderNum
+    const method = this.encryptMethod
+    let errorCorrectingCode = crc32c.buf(publicKey, order)
+    errorCorrectingCode = (errorCorrectingCode & 0xfffffff0) | order
     errorCorrectingCode = errorCorrectingCode >>> 0
 
     const buffer = new Int32Array([errorCorrectingCode]).buffer
@@ -83,8 +81,8 @@ export default class DIOSM2 implements GenericAddress {
     const address = {
       currency: 'DIO',
       address: mergedBuffer,
-      encryptMethod: 'sm2',
-      encryptMethodOrderNumber: encryptMethod,
+      encryptMethod: method,
+      encryptMethodOrderNumber: order,
       salt: salt || 1,
       alias: alias || `Address${salt}`,
     }

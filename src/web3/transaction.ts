@@ -1,9 +1,9 @@
-import { decode, encode } from 'base64-arraybuffer'
+import { encode } from 'base64-arraybuffer'
 import { sha256 } from 'js-sha256'
 import base32Encode from 'base32-encode'
 
 import TransactionService from '../api/transactions'
-import { concat, DIOAddress } from '../utils'
+import { DIOAddress } from '../utils'
 import PowDifficulty from '../utils/powDifficulty'
 import OverviewService from '../api/overview'
 import { OriginalTxn } from '../api/type'

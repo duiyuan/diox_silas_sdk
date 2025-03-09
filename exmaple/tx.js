@@ -22,15 +22,25 @@ signEd25519Txn()
   })
   .catch(console.error)
 
-async function generateAddress(privatekey) {
+async function generateAddress(alg, privatekey) {
   const sk_u8 = dataview.hexToU8(privatekey)
 
-  const { sk, pk, address, sku8 } = await new DIOAddress('ed25519', sk_u8).generate()
+  const { sk, pk, address, sku8 } = await new DIOAddress(alg, sk_u8).generate()
   return { sk, pk, address, sk_u8: sku8 }
 }
 
+async function signECDSATxn() {
+  const result = await generateAddress('ecdsa', user_0.sk)
+
+  return web3.txn.transfer({
+    to: user_1.address,
+    amount: '10000000000',
+    secretKey: result.sk_u8,
+  })
+}
+
 async function signTxn() {
-  const result = await generateAddress(user_0.sk)
+  const result = await generateAddress('sm2', user_0.sk)
 
   return web3.txn.transfer({
     to: user_1.address,
@@ -40,14 +50,14 @@ async function signTxn() {
 }
 
 async function signEd25519Txn() {
-  const sk = 'L5BqNz9qv7i1ycQVsIFr7w9GjS1yRNyQhn931rLNaC1ns9etY5xZ6h05E7jTFHo8wZT7f0kv676hMMwo6qinHQ=='
-  const u8 = toByteArray(sk)
-  const skhex = dataview.u8ToHex(u8)
-  const user = {
-    skhex: skhex,
-    address: 'cysxfbb3khcym79s2ewd653t7k0s9yvz94qyqfn16362htn8mwem7q8n6w:ed25519',
-  }
-  const result = await generateAddress(skhex)
+  // const sk = 'L5BqNz9qv7i1ycQVsIFr7w9GjS1yRNyQhn931rLNaC1ns9etY5xZ6h05E7jTFHo8wZT7f0kv676hMMwo6qinHQ=='
+  // const u8 = toByteArray(sk)
+  // const skhex = dataview.u8ToHex(u8)
+  // const user = {
+  //   skhex: skhex,
+  //   address: 'cysxfbb3khcym79s2ewd653t7k0s9yvz94qyqfn16362htn8mwem7q8n6w:ed25519',
+  // }
+  const result = await generateAddress('ed25519', user_0.sk)
 
   return web3.txn.transfer({
     to: 'm00ad46hnbt27hg05vfdpahp1jp8gyfp3vytst9yxhewfv4ws5x4669dr8:ed25519',

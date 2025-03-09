@@ -4,10 +4,11 @@ import crc32c from 'crc-32/crc32c'
 
 import DIOSM2 from './sm2'
 import DIOEd25519 from './ed25519'
+import ECDSA from './ecdsa'
 import GenericAddress from './base'
 import { areUint8ArraysEqual, concat } from '../buffer'
 
-type Alg = 'sm2' | 'ed25519'
+type Alg = 'sm2' | 'ed25519' | 'ecdsa'
 
 interface PKItem {
   encryptedMethodOrderNumber: number
@@ -36,6 +37,10 @@ export class DIOAddress {
       case 'ed25519':
         this.methodNum = 0x3
         this.instance = new DIOEd25519({ privateKey: privateKey })
+        break
+      case 'ecdsa':
+        this.methodNum = 0x4
+        this.instance = new ECDSA({ privateKey: privateKey })
         break
       default:
         throw 'DIOAddress ERROR: unsupported alg:' + this.alg

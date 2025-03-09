@@ -21,12 +21,12 @@ interface Options {
   seed?: Uint8Array
 }
 
-export default class DIOEd25519 implements GenericAddress {
+export default class ECDSA implements GenericAddress {
   private privateKey?: string
   private privateKeyU8?: Uint8Array = new Uint8Array()
 
-  encryptMethod: EncryptMethod = 'ed25519'
-  encryptOrderNum = 3
+  encryptMethod: EncryptMethod = 'sm2'
+  encryptOrderNum = 4
 
   saltRef = 1
   salt = new Uint8Array()
@@ -65,7 +65,7 @@ export default class DIOEd25519 implements GenericAddress {
   async generate() {
     const [pku8, sku8] = await this.keyPaires()
 
-    const o = this.pkToDIOStruct(pku8)
+    const o = this.pkToDIOStruct(pku8, this.encryptOrderNum, this.encryptMethod)
     const sk = dataview.u8ToHex(sku8)
     const pk = dataview.u8ToHex(pku8)
     const address = base32Encode(o.address, 'Crockford').toLowerCase() + ':' + this.encryptMethod
@@ -79,7 +79,12 @@ export default class DIOEd25519 implements GenericAddress {
     return ed.getPublicKey(privateKey)
   }
 
-  private pkToDIOStruct(publicKey: Uint8Array, salt = 1, alias?: string) {
+  private pkToDIOStruct(
+    publicKey: Uint8Array,
+
+    salt = 1,
+    alias?: string,
+  ) {
     const order = this.encryptOrderNum
     const method = this.encryptMethod
     let errorCorrectingCode = crc32c.buf(publicKey, order)
