@@ -60,32 +60,6 @@ const isn = await web3.addr.getISN('eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2j
 // 1
 ```
 
-#### web3.addr.getAddressTokens(address: string)
-
-```js
-const tokens = await web3.addr.getAddressTokens('eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2jmcdeb50j6es2xm')[
-  {
-    TokenID: '5789767',
-    Address: 'GXX:token',
-    Symbol: 'GXX',
-    TokenState: 0,
-    Decimals: 8,
-    Amount: '3018154202998548',
-    StateHeight: 294558,
-  }
-]
-```
-
-#### web3.addr.getAddressTokenBalance(address: string, token: string)
-
-```js
-const tokenbalance = await web3.addr.getAddressTokenBalance(
-  'eqfkk71rg18mcjcp63tkcz4xpcxd91wtd5atpwk82j2jmcdeb50j6es2xm',
-  'FXX',
-)
-// '1000000000000000000000'
-```
-
 #### web3.addr.getAddressInfo(address: string): [DIOX.AddressBaseInfo](#dioxaddressbaseinfo)
 
 ```js
@@ -192,13 +166,6 @@ const txn = await web3.txn.getEstimatedFee({
 //95500
 ```
 
-#### web3.txn.sendRawTx(rawTxData: string)
-
-```js
-const txnHash = await web3.txn.sendRawTx(base64rawData)
-//txnHash
-```
-
 #### web3.txn.transfer({to: string, amount: string, secretKey: Unit8Array })
 
 ```js
@@ -208,55 +175,6 @@ const txnHash = await web3.txn.transfer({
   secretKey: secretKey,
 })
 //txnHash
-```
-
-#### web3.txn.transferFCA({to: string, amount: string, symbol: string, secretKey: Unit8Array })
-
-```js
-const txnHash = await web3.txn.transferFCA({
-  to: '0x1234567890abcdef1234567890abcdef12345678:ed25519',
-  amount: '10000000000',
-  symbol: 'FCA',
-  secretKey: secretKey,
-})
-//txnHash
-```
-
-### utils
-
-#### utils.generateAddress(targetShardIndex: number): { address: string, seed:Unit8Array }
-
-```js
-const { address, seed } = utils.generateAddress(1)
-// address: qzysdapqk4q3442fx59y2ajnsbx5maz3d6japb7jngjrqq5xqddh60n420: ed25519
-```
-
-#### utils.toTokenAmount(amount: string, decimals: number)
-
-```js
-const isValid = utils.toTokenAmount('100000000', 8)
-//1
-```
-
-#### utils.isValidAddress(address: string)
-
-```js
-const isValid = utils.isValidAddress('qzysdapqk4q3442fx59y2ajnsbx5maz3d6japb7jngjrqq5xqddh60n420', 0)
-//true
-```
-
-#### utils.extractPublicKey(address: string)
-
-```js
-const shardIndex = utils.extractPublicKey('qzysdapqk4q3442fx59y2ajnsbx5maz3d6japb7jngjrqq5xqddh60n420', 0)
-//Unit8Array
-```
-
-#### utils.addressToShard(address: string, shardOrder?: number)
-
-```js
-const shardIndex = utils.addressToShard('qzysdapqk4q3442fx59y2ajnsbx5maz3d6japb7jngjrqq5xqddh60n420', 0)
-//0
 ```
 
 ## types
