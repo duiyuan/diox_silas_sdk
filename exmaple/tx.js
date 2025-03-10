@@ -31,16 +31,6 @@ async function generateAddress(alg, privatekey) {
   return { sk, pk, address, sk_u8: sku8 }
 }
 
-async function signECDSATxn() {
-  const result = await generateAddress('ecdsa', user_0.sk)
-
-  return web3.txn.transfer({
-    to: user_1.address,
-    amount: '10000000000',
-    secretKey: result.sk_u8,
-  })
-}
-
 async function signTxn() {
   const result = await generateAddress('sm2', user_0.sk)
 

@@ -64,8 +64,10 @@ class Transaction {
     const dataWithPK = dioAddress.insertPKIntoTxData(txdata, [
       { encryptedMethodOrderNumber: dioAddress.methodNum, publicKey: pk },
     ])
+    const raw = encode(dataWithPK)
     const signedInfo = await dioAddress.sign(dataWithPK, secretKey)
     const signature = dataview.u8ToHex(signedInfo)
+
     const isValid = await dioAddress.verifySignature(dataWithPK, signature, longPK!)
     if (!isValid) {
       throw new Error('sign error')
@@ -77,6 +79,14 @@ class Transaction {
     })
     const finalInfowithNonce = powDiff.getHashMixinNonnce()
     const hash = base32Encode(sha256.arrayBuffer(finalInfowithNonce), 'Crockford')
+    const log = {
+      raw,
+      signature: encode(signedInfo),
+      longPK: encode(longPK!),
+      pk: encode(pk),
+      rawTxData: encode(finalInfowithNonce),
+    }
+    console.log(log)
     return {
       rawTxData: encode(finalInfowithNonce),
       hash: hash.toLowerCase(),
@@ -84,10 +94,10 @@ class Transaction {
   }
 
   async send(originTxn: OriginalTxn, secretKey: Uint8Array) {
-    const { rawTxData: signData, hash } = await this.sign(originTxn, secretKey)
+    const { rawTxData, hash } = await this.sign(originTxn, secretKey)
     console.log('hash =>', hash)
     const ret = await this.txnServices.sendTransaction({
-      txdata: signData,
+      txdata: rawTxData,
     })
     return ret.Hash
   }
