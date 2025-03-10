@@ -3,13 +3,11 @@ import { sha256 } from 'js-sha256'
 import base32Encode from 'base32-encode'
 
 import TransactionService from '../api/transactions'
-import { DIOAddress } from '../utils'
+import { DIOAddress, Alg } from '../utils'
 import PowDifficulty from '../utils/powDifficulty'
 import OverviewService from '../api/overview'
 import { OriginalTxn } from '../api/type'
 import { dataview } from '@dioxide-js/misc'
-
-const TEST_ALG = 'ed25519'
 
 export interface TransferDIOParams {
   to: string
@@ -30,9 +28,12 @@ class Transaction {
   private txnServices: TransactionService
   private overViewServices: OverviewService
 
-  constructor() {
+  alg: Alg = 'sm2'
+
+  constructor(alg: Alg = 'sm2') {
     this.txnServices = new TransactionService()
     this.overViewServices = new OverviewService()
+    this.alg = alg
   }
 
   async getTxn(hash: string) {
@@ -45,7 +46,7 @@ class Transaction {
   }
 
   async sign(originalTxn: OriginalTxn, secretKey: Uint8Array) {
-    const dioAddress = new DIOAddress(TEST_ALG, secretKey)
+    const dioAddress = new DIOAddress(this.alg, secretKey)
     const txdata = await this.compose(originalTxn)
 
     let pk: Uint8Array | null = null
@@ -171,7 +172,7 @@ class Transaction {
 
   async transfer(params: TransferDIOParams) {
     const { to, amount, secretKey, ttl } = params
-    const sender = await this.sk2base32Address(secretKey, TEST_ALG)
+    const sender = await this.sk2base32Address(secretKey, this.alg)
     return this.send(
       {
         sender,
@@ -189,7 +190,7 @@ class Transaction {
 
   async transferFCA(params: TransferFCAParams) {
     const { symbol, to, amount, secretKey, ttl } = params
-    const sender = await this.sk2base32Address(secretKey, TEST_ALG)
+    const sender = await this.sk2base32Address(secretKey, this.alg)
     return this.send(
       {
         sender,
@@ -206,7 +207,7 @@ class Transaction {
     )
   }
 
-  private async sk2base32Address(sk: Uint8Array, alg: 'sm2' | 'ed25519') {
+  private async sk2base32Address(sk: Uint8Array, alg: Alg) {
     // const pk = await ed.getPublicKey(sk)
     // const { address } = pk2Address(pk)
     // return fullAddress(base32Encode(address, 'Crockford').toLocaleLowerCase())

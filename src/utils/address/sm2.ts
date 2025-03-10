@@ -29,7 +29,7 @@ export default class DIOSM2 implements GenericAddress {
     }
   }
 
-  async generate(algHash: 'sm3' | 'sha256' = 'sha256') {
+  async generate(algHash: 'sm3' | 'sha256' = 'sm3') {
     const [pk, sk] = await this.keyPaires()
     const publickKeyU8 = dataview.hexToU8(pk!)
     const sku8 = dataview.hexToU8(sk!)

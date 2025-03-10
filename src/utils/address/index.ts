@@ -8,7 +8,7 @@ import ECDSA from './ecdsa'
 import GenericAddress from './base'
 import { areUint8ArraysEqual, concat } from '../buffer'
 
-type Alg = 'sm2' | 'ed25519' | 'ecdsa'
+export type Alg = 'sm2' | 'ed25519' | 'ecdsa'
 
 interface PKItem {
   encryptedMethodOrderNumber: number
