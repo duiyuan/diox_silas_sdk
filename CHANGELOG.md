@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.1 (2025-03-10)
+
 ### [0.0.13](https://github.com/duiyuan/web3/compare/v0.0.12...v0.0.13) (2024-12-19)
 
 
