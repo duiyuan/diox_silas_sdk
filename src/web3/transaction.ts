@@ -79,15 +79,10 @@ class Transaction {
     })
     const finalInfowithNonce = powDiff.getHashMixinNonnce()
     const hash = base32Encode(sha256.arrayBuffer(finalInfowithNonce), 'Crockford')
-    const log = {
-      raw,
+    return {
+      composedTxDataWithPK: raw,
       signature: encode(signedInfo),
       longPK: encode(longPK!),
-      pk: encode(pk),
-      rawTxData: encode(finalInfowithNonce),
-    }
-    console.log(log)
-    return {
       rawTxData: encode(finalInfowithNonce),
       hash: hash.toLowerCase(),
     }
