@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js'
+import json from 'json-bigint'
 
 export const shakeKeyValue = (params: KeyValue | undefined) => {
   if (params && typeof params === 'object') {
@@ -43,5 +44,16 @@ export const toTokenAmount = (amount: string, decimals: number) => {
 
 export const fullAddress = (address: string) => {
   if (!address) return ''
-  return `${address.split(':')[0]}:ed25519`
+  if (address.includes(':')) {
+    return address
+  }
+  return address + ':sm2'
+}
+
+export const stringify = (content: any) => {
+  return json.stringify(content)
+}
+
+export const parse = (content: string) => {
+  return json.parse(content)
 }

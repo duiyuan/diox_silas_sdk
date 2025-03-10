@@ -1,5 +1,5 @@
 {
-  "name": "@silasjs/sdk",
+  "name": "@dioxide-js/silas",
   "version": "0.0.13",
   "description": "RPC utility for Silas",
   "main": "./lib/commonjs/index.js",
@@ -35,12 +35,15 @@
     "lint": "eslint --cache --cache-strategy content --ext .ts .",
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "test": "jest --clearCache && jest --config ./test/unit/jest.config.js",
-    "watch": "onchange \"src/**/*\" -e \"src/constants/version.ts\" -- yarn build"
+    "watch": "onchange \"src/**/*\" -e \"src/constants/version.ts\" -- yarn build",
+    "ex:base": "node exmaple/base.js",
+    "ex:tx": "node exmaple/tx.js"
   },
   "author": "dioxide",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "@types/sm-crypto": "^0.3.4",
     "@typescript-eslint/eslint-plugin": "^8.13.0",
     "@typescript-eslint/parser": "^8.13.0",
     "concurrently": "^9.0.1",
@@ -55,6 +58,7 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "@dioxide-js/misc": "^0.2.3",
     "@noble/ed25519": "1.6.0",
     "@types/json-bigint": "^1.0.4",
     "@types/node-fetch": "^2.6.11",
@@ -62,13 +66,16 @@
     "base32-decode": "1.0.0",
     "base32-encode": "1",
     "base64-arraybuffer": "1.0.2",
+    "base64-js": "^1.5.1",
     "crc-32": "1.2.2",
     "dotenv": "^16.4.5",
+    "gm-crypto": "^0.1.12",
     "js-sha256": "0.10.1",
     "js-sha512": "0.8.0",
-    "json-bigint": "1.0.0",
+    "json-bigint": "^1.0.0",
     "node-fetch": "2",
     "query-string": "7.1.1",
-    "sha256": "0.2.0"
+    "sha256": "0.2.0",
+    "sm-crypto": "^0.3.13"
   }
 }

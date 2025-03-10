@@ -8,15 +8,9 @@ class BlockSvc extends Request {
       limit,
       pos,
       height,
-      module: 'block',
-      action: 'txn_executed',
     }
-    const resp = await this.get<CommonResponse<DIOX.ExcutedTx>>('', {
-      data,
-    })
-    const { Status, Message, Result } = resp
-    if (Status) throw Message
-    return Result
+    const resp = await this.post<DIOX.ExcutedTx>('chain.txn_history', data)
+    return resp
   }
 }
 

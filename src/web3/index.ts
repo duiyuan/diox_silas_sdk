@@ -9,7 +9,7 @@ import { LIB_VERSION } from '../constants/version'
 class Web3 {
   private net: Provider
 
-  addr: Address
+  address: Address
   txn: Transaction
   blocks: Blocks
   overview: Overview
@@ -18,7 +18,7 @@ class Web3 {
     this.net = net || NET.TEST
     provider.set(this.net)
 
-    this.addr = new Address()
+    this.address = new Address()
     this.blocks = new Blocks()
     this.overview = new Overview()
     this.txn = new Transaction()

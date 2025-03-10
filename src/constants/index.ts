@@ -47,18 +47,18 @@ export enum NET {
 export function getProvider(net: Provider) {
   if (net === NET.MAIN) {
     return {
-      dioxide: 'https://api.dioxide.network/api',
+      dioxide: 'http://127.0.0.1:7600',
       rpc: 'https://node-rpc.dioxide.network',
     }
   }
   if (typeof net === 'object') {
     return {
-      dioxide: net?.dioxide || 'http://47.100.78.190:7000/dev/api',
+      dioxide: net?.dioxide || 'http://127.0.0.1:7600',
       rpc: net?.rpc || 'http://139.224.254.200:62222',
     }
   }
   return {
-    dioxide: 'http://47.100.78.190:7000/dev/api',
+    dioxide: 'http://127.0.0.1:7600',
     rpc: 'http://139.224.254.200:62222',
   }
 }

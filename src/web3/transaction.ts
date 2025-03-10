@@ -1,22 +1,39 @@
-import { decode, encode } from 'base64-arraybuffer'
+import { encode } from 'base64-arraybuffer'
 import { sha256 } from 'js-sha256'
-import * as ed from '@noble/ed25519'
 import base32Encode from 'base32-encode'
 
-import TransactionService, { ExcutedTxCond } from '../api/transactions'
-import { concat, fullAddress, pk2Address } from '../utils'
-import { extractPublicKey } from '../utils'
+import TransactionService from '../api/transactions'
+import { DIOAddress, Alg } from '../utils'
 import PowDifficulty from '../utils/powDifficulty'
 import OverviewService from '../api/overview'
 import { OriginalTxn } from '../api/type'
+import { dataview } from '@dioxide-js/misc'
+
+export interface TransferDIOParams {
+  to: string
+  amount: string
+  secretKey: Uint8Array
+  ttl?: number
+}
+
+export interface TransferFCAParams {
+  symbol: string
+  to: string
+  amount: string
+  secretKey: Uint8Array
+  ttl?: number
+}
 
 class Transaction {
   private txnServices: TransactionService
   private overViewServices: OverviewService
 
-  constructor() {
+  alg: Alg = 'sm2'
+
+  constructor(alg: Alg = 'sm2') {
     this.txnServices = new TransactionService()
     this.overViewServices = new OverviewService()
+    this.alg = alg
   }
 
   async getTxn(hash: string) {
@@ -24,27 +41,36 @@ class Transaction {
   }
 
   private async compose(originalTxn: OriginalTxn) {
-    const { ret, err } = await this.txnServices.compose(JSON.stringify(originalTxn))
-    if (err) {
-      throw new Error(ret.toString())
-    }
+    const ret = await this.txnServices.compose(originalTxn)
     return ret.TxData
   }
 
   async sign(originalTxn: OriginalTxn, secretKey: Uint8Array) {
-    const unit8ArraySecrectKey = secretKey
+    const dioAddress = new DIOAddress(this.alg, secretKey)
     const txdata = await this.compose(originalTxn)
-    const pk = extractPublicKey(originalTxn.sender)
+
+    let pk: Uint8Array | null = null
+    let longPK: Uint8Array | null = null
+
+    if (dioAddress.alg === 'sm2') {
+      pk = await dioAddress.getPubicKeyFromPrivateKey(secretKey)
+      longPK = dataview.concat(new Uint8Array([4]), pk)
+    } else {
+      longPK = pk = dioAddress.addressToPublicKey(originalTxn.sender)
+    }
     if (!pk) {
       throw new Error('pk error')
     }
-    const dataWithPK = this.insertPK(txdata, [{ encryptedMethodOrderNumber: 0x3, publicKey: new Uint8Array(pk) }])
-    const signedInfo = await ed.sign(dataWithPK, unit8ArraySecrectKey)
-    const isValid = await ed.verify(signedInfo, dataWithPK, pk)
+    const dataWithPK = dioAddress.insertPKIntoTxData(txdata, [
+      { encryptedMethodOrderNumber: dioAddress.methodNum, publicKey: pk },
+    ])
+    const signedInfo = await dioAddress.sign(dataWithPK, secretKey)
+    const signature = dataview.u8ToHex(signedInfo)
+    const isValid = await dioAddress.verifySignature(dataWithPK, signature, longPK!)
     if (!isValid) {
       throw new Error('sign error')
     }
-    const finalInfo = concat(dataWithPK, signedInfo)
+    const finalInfo = dataview.concat(dataWithPK, signedInfo)
     const powDiff = new PowDifficulty({
       originTxn: finalInfo.buffer,
       ttl: originalTxn.ttl,
@@ -58,45 +84,19 @@ class Transaction {
   }
 
   async send(originTxn: OriginalTxn, secretKey: Uint8Array) {
-    const { rawTxData: signData } = await this.sign(originTxn, secretKey)
-    const { ret, err } = await this.txnServices.sendTransaction(
-      JSON.stringify({
-        txdata: signData,
-      }),
-    )
-    if (err) {
-      throw new Error(ret.toString())
-    }
+    const { rawTxData: signData, hash } = await this.sign(originTxn, secretKey)
+    console.log('hash =>', hash)
+    const ret = await this.txnServices.sendTransaction({
+      txdata: signData,
+    })
     return ret.Hash
   }
 
   async sendRawTx(rawTxData: string) {
-    const { ret, err } = await this.txnServices.sendTransaction(
-      JSON.stringify({
-        txdata: rawTxData,
-      }),
-    )
-    if (err) {
-      throw new Error(ret.toString())
-    }
-    return ret.Hash
-  }
-
-  private insertPK(
-    txData: string,
-    pkList: { encryptedMethodOrderNumber: number; publicKey: Uint8Array }[],
-  ): Uint8Array {
-    const originTxData = new Uint8Array(decode(txData))
-
-    const secSuites: Uint8Array[] = []
-    pkList.forEach((el) => {
-      const id = new Uint8Array([el.encryptedMethodOrderNumber])
-      const pk = el.publicKey
-      secSuites.push(id)
-      secSuites.push(pk)
+    const ret = await this.txnServices.sendTransaction({
+      txdata: rawTxData,
     })
-    const result = concat(originTxData, ...secSuites)
-    return result
+    return ret.Hash
   }
 
   async getEstimatedFee(originTxn: OriginalTxn) {
@@ -105,19 +105,14 @@ class Transaction {
     const avgGasPrice = overview?.AvgGasPrice || 0
     const to = args.to || args.To
 
-    const { ret, err } = await this.txnServices.compose(
-      JSON.stringify({
-        sender: to,
-        gasprice: avgGasPrice,
-        delegatee: delegatee,
-        function: func,
-        args,
-        tokens,
-      }),
-    )
-    if (err) {
-      throw new Error('services.compose failed: txdata is empty(' + ret.toString() + ')')
-    }
+    const ret = await this.txnServices.compose({
+      sender: to,
+      gasprice: avgGasPrice,
+      delegatee: delegatee,
+      function: func,
+      args,
+      tokens,
+    })
 
     const gasLimit = ret.GasOffered.toString()
     const gasFee = this.calculateGasFee({
@@ -135,9 +130,9 @@ class Transaction {
     return gasFee
   }
 
-  getDepositTxByBlock(params: ExcutedTxCond) {
-    return this.txnServices.getDepositTx(params)
-  }
+  // getDepositTxByBlock(params: ExcutedTxCond) {
+  //   return this.txnServices.getDepositTx(params)
+  // }
 
   // async reclaimWallet({
   //   refund,
@@ -170,8 +165,9 @@ class Transaction {
   //   )
   // }
 
-  async transfer({ to, amount, secretKey, ttl }: { to: string; amount: string; secretKey: Uint8Array; ttl?: number }) {
-    const sender = await this.sk2base32Address(secretKey)
+  async transfer(params: TransferDIOParams) {
+    const { to, amount, secretKey, ttl } = params
+    const sender = await this.sk2base32Address(secretKey, this.alg)
     return this.send(
       {
         sender,
@@ -187,20 +183,9 @@ class Transaction {
     )
   }
 
-  async transferFCA({
-    symbol,
-    to,
-    amount,
-    secretKey,
-    ttl,
-  }: {
-    symbol: string
-    to: string
-    amount: string
-    secretKey: Uint8Array
-    ttl?: number
-  }) {
-    const sender = await this.sk2base32Address(secretKey)
+  async transferFCA(params: TransferFCAParams) {
+    const { symbol, to, amount, secretKey, ttl } = params
+    const sender = await this.sk2base32Address(secretKey, this.alg)
     return this.send(
       {
         sender,
@@ -217,10 +202,13 @@ class Transaction {
     )
   }
 
-  private async sk2base32Address(sk: Uint8Array) {
-    const pk = await ed.getPublicKey(sk)
-    const { address } = pk2Address(pk)
-    return fullAddress(base32Encode(address, 'Crockford').toLocaleLowerCase())
+  private async sk2base32Address(sk: Uint8Array, alg: Alg) {
+    // const pk = await ed.getPublicKey(sk)
+    // const { address } = pk2Address(pk)
+    // return fullAddress(base32Encode(address, 'Crockford').toLocaleLowerCase())
+    const dioAddress = new DIOAddress(alg, sk)
+    const { address } = await dioAddress.generate()
+    return address.toLowerCase()
   }
 }
 

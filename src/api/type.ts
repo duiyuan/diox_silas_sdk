@@ -234,6 +234,11 @@ export interface OriginalTxn {
   scale?: number
 }
 
+export interface BalanceItem {
+  Amount: string
+  Symbol: string
+}
+
 export interface AddrBalance {
   Address: string
   Height: number

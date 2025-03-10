@@ -134,3 +134,6 @@ dist
 lib/
 dist/
 tsconfig.tsbuildinfo
+
+
+test.js

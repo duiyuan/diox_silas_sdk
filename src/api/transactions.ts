@@ -1,22 +1,5 @@
-import provider from './provider'
 import Request from './request'
-import { DIOX, TxDetailResponse } from './type'
-
-export function getComposeUrl() {
-  const { rpc } = provider.get()
-  const encodeUri = encodeURI(rpc + '/api?req=tx.compose')
-  return encodeUri
-}
-export function getLimitUrl() {
-  const { rpc } = provider.get()
-  const encodeUri = encodeURI(rpc + '/api?req=tx.estimate_gas')
-  return encodeUri
-}
-export function getSendUrl() {
-  const { rpc } = provider.get()
-  const encodeUri = encodeURI(rpc + '/api?req=tx.send')
-  return encodeUri
-}
+import { OriginalTxn, TxDetailResponse } from './type'
 
 export interface ExcutedTxCond {
   height: number
@@ -25,49 +8,33 @@ export interface ExcutedTxCond {
 }
 
 class TransactionService extends Request {
-  compose(body: string) {
-    return this.post<{
-      err?: number
-      rsp: string
-      ret: { TxData: string; GasOffered: number }
-    }>(getComposeUrl(), { body })
+  compose(composed: { [key: string]: any }) {
+    return this.postToBC<{ TxData: string; GasOffered: number }>('tx.compose', composed)
   }
 
-  sendTransaction(body: string) {
-    return this.post<{
-      err?: number
-      rsp: string
-      ret: { Hash: string; Shard: number }
-    }>(getSendUrl(), { body })
+  sendTransaction(signedText: { [key: string]: any }) {
+    return this.post<{ Hash: string; Shard: number }>('tx.send', signedText)
   }
 
   async getTransactionByHash(hash: string) {
-    const { Status, Message, Result } = await this.get<CommonResponse<TxDetailResponse>>('', {
-      data: {
-        module: 'txn',
-        action: 'details',
-        hash,
-      },
+    const resp = await this.post<TxDetailResponse>('chain.txn_detail', {
+      hash,
     })
-    if (Status) throw Message
-    return Result?.Content
+    return resp
   }
 
-  async getDepositTx(params: ExcutedTxCond): Promise<DIOX.DepositTxSum[]> {
-    const { limit = 500, pos = 0, height } = params
-    const data = {
-      limit,
-      pos,
-      height,
-      module: 'txn',
-      action: 'deposit',
-    }
-    const resp = await this.get<CommonResponse<DIOX.DepositTxSum[]>>('', {
-      data,
+  sign(privateKey: string, txdata: string) {
+    return this.postToBC<{ TxData: string }>('tx.sign', {
+      sk: [privateKey],
+      txdata,
     })
-    const { Status, Message, Result } = resp
-    if (Status) throw Message
-    return Result
+  }
+
+  sendTxWithPrivateKey(privateKey: string, params: OriginalTxn) {
+    return this.post<{ Hash: string }>('tx.send', {
+      privatekey: privateKey,
+      ...params,
+    })
   }
 }
 
