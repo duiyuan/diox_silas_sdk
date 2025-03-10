@@ -50,12 +50,13 @@ class Transaction {
     const txdata = await this.compose(originalTxn)
 
     let pk: Uint8Array | null = null
+    let longPK: Uint8Array | null = null
 
     if (dioAddress.alg === 'sm2') {
       pk = await dioAddress.getPubicKeyFromPrivateKey(secretKey)
-      pk = dataview.concat(new Uint8Array([4]), pk)
+      longPK = dataview.concat(new Uint8Array([4]), pk)
     } else {
-      pk = dioAddress.addressToPublicKey(originalTxn.sender)
+      longPK = pk = dioAddress.addressToPublicKey(originalTxn.sender)
     }
     if (!pk) {
       throw new Error('pk error')
@@ -65,7 +66,7 @@ class Transaction {
     ])
     const signedInfo = await dioAddress.sign(dataWithPK, secretKey)
     const signature = dataview.u8ToHex(signedInfo)
-    const isValid = await dioAddress.verifySignature(dataWithPK, signature, pk)
+    const isValid = await dioAddress.verifySignature(dataWithPK, signature, longPK!)
     if (!isValid) {
       throw new Error('sign error')
     }
@@ -82,13 +83,7 @@ class Transaction {
     }
   }
 
-  async send(originTxn: OriginalTxn, secretKey: Uint8Array, composeOnRemote = true) {
-    if (composeOnRemote) {
-      const privatekey = encode(secretKey)
-      const resp = await this.txnServices.sendTxWithPrivateKey(privatekey, originTxn)
-      console.log('hash =>', resp.Hash)
-      return resp.Hash
-    }
+  async send(originTxn: OriginalTxn, secretKey: Uint8Array) {
     const { rawTxData: signData, hash } = await this.sign(originTxn, secretKey)
     console.log('hash =>', hash)
     const ret = await this.txnServices.sendTransaction({

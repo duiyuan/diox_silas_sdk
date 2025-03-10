@@ -46,7 +46,7 @@ async function signTxn() {
 
   return web3.txn.transfer({
     to: user_1.address,
-    amount: '10000000000',
+    amount: '300000000',
     secretKey: result.sk_u8,
   })
 }
