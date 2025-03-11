@@ -1,5 +1,3 @@
-import { getProvider } from '../constants'
-
 class SingleProvider {
   private dioxide: string
   private rpc: string
@@ -16,10 +14,13 @@ class SingleProvider {
     }
   }
 
-  set(net: Provider) {
-    const { dioxide, rpc } = getProvider(net)
-    this.dioxide = dioxide
-    this.rpc = rpc
+  set(endpoint: string, rpc?: string) {
+    if (endpoint) {
+      this.dioxide = endpoint
+    }
+    if (rpc) {
+      this.rpc = endpoint
+    }
   }
 }
 

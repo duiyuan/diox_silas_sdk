@@ -1,4 +1,4 @@
-type Provider = string | { dioxide: string; rpc: string }
+type Provider = string
 
 interface KeyValue<T = any> {
   [props: string]: T
