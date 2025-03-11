@@ -27,7 +27,6 @@
   ],
   "scripts": {
     "build": "concurrently --kill-others-on-fail \"yarn:build:*(!check) \"",
-    "build:pre": "node ./prebuild",
     "build:cjs": "tsc --build tsconfig.cjs.json && node ./cjspkg",
     "build:esm": "tsc --build tsconfig.esm.json && node ./esmpkg",
     "build:types": "tsc --build tsconfig.types.json",
