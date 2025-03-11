@@ -11,13 +11,27 @@ export interface AddressGenerated {
 export type Hex = string
 export type EncryptMethod = 'ed25519' | 'sm2' | 'ecdsa'
 
+export interface AlgOption {
+  der?: boolean | undefined
+  hash?: boolean | undefined
+}
+
 export default abstract class GenericAddress {
   abstract encryptMethod: EncryptMethod
   abstract encryptOrderNum: number
   abstract getPubicKeyFromPrivateKey(privateKeyHex: string | Uint8Array): Promise<Uint8Array>
   abstract generate(): Promise<AddressGenerated>
-  abstract sign(content: string | number[] | Uint8Array, privateKey: Uint8Array): Promise<Uint8Array>
-  abstract verify(msg: string | number[] | Uint8Array, signedValHex: Hex, publicKey: Uint8Array): Promise<boolean>
+  abstract sign(
+    content: string | number[] | Uint8Array,
+    privateKey: Uint8Array,
+    options?: AlgOption,
+  ): Promise<Uint8Array>
+  abstract verify(
+    msg: string | number[] | Uint8Array,
+    signedValHex: Hex,
+    publicKey: Uint8Array,
+    options?: AlgOption,
+  ): Promise<boolean>
 }
 
 export function encodeMnemonic(seed: number[] | Uint8Array) {
