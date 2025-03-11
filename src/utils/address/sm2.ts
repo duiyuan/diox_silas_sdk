@@ -112,8 +112,8 @@ export default class DIOSM2 implements GenericAddress {
       content = Array.from(content)
     }
     const signature = sm2.doSignature(content, sk, {
-      hash: false,
-      der: false,
+      hash: true,
+      der: true,
     })
     const ret = dataview.hexToU8(signature)
     return Promise.resolve(ret)
@@ -125,8 +125,8 @@ export default class DIOSM2 implements GenericAddress {
       msg = Array.from(msg)
     }
     const ret = sm2.doVerifySignature(msg, sigValueHex, pk, {
-      hash: false,
-      der: false,
+      hash: true,
+      der: true,
     })
     return Promise.resolve(ret)
   }
