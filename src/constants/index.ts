@@ -46,19 +46,7 @@ export enum NET {
 
 export function getProvider(net: Provider) {
   if (net === NET.MAIN) {
-    return {
-      dioxide: 'http://127.0.0.1:7600',
-      rpc: 'https://node-rpc.dioxide.network',
-    }
+    return 'http://127.0.0.1:7600'
   }
-  if (typeof net === 'object') {
-    return {
-      dioxide: net?.dioxide || 'http://127.0.0.1:7600',
-      rpc: net?.rpc || 'http://139.224.254.200:62222',
-    }
-  }
-  return {
-    dioxide: 'http://127.0.0.1:7600',
-    rpc: 'http://139.224.254.200:62222',
-  }
+  return 'http://127.0.0.1:7600'
 }

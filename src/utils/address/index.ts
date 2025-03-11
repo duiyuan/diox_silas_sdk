@@ -5,7 +5,7 @@ import crc32c from 'crc-32/crc32c'
 import DIOSM2 from './sm2'
 import DIOEd25519 from './ed25519'
 import ECDSA from './ecdsa'
-import GenericAddress from './base'
+import GenericAddress, { AlgOption } from './base'
 import { areUint8ArraysEqual, concat } from '../buffer'
 
 export type Alg = 'sm2' | 'ed25519' | 'ecdsa'
@@ -55,12 +55,12 @@ export class DIOAddress {
     return this.instance!.generate()
   }
 
-  sign(content: string | number[] | Uint8Array, privateKey: Uint8Array) {
-    return this.instance!.sign(content, privateKey)
+  sign(content: string | number[] | Uint8Array, privateKey: Uint8Array, options?: AlgOption) {
+    return this.instance!.sign(content, privateKey, options)
   }
 
-  verifySignature(msg: string | number[] | Uint8Array, signedHex: string, publicKey: Uint8Array) {
-    return this.instance!.verify(msg, signedHex, publicKey)
+  verifySignature(msg: string | number[] | Uint8Array, signedHex: string, publicKey: Uint8Array, options?: AlgOption) {
+    return this.instance!.verify(msg, signedHex, publicKey, options)
   }
 
   addressToPublicKey(address: string): Uint8Array | null {

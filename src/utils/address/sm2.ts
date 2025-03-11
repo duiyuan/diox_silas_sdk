@@ -4,7 +4,7 @@ import crc32c from 'crc-32/crc32c.js'
 import base32Encode from 'base32-encode'
 import sha256 from 'sha256'
 
-import GenericAddress, { EncryptMethod } from './base'
+import GenericAddress, { EncryptMethod, AlgOption } from './base'
 
 const sm2 = smcrypto.sm2
 const sm3 = (smcrypto as any).default.sm3
@@ -106,22 +106,32 @@ export default class DIOSM2 implements GenericAddress {
     return [publicKey, privateKey]
   }
 
-  sign(content: string | Uint8Array | number[], privateKey: Uint8Array): Promise<Uint8Array> {
+  sign(content: string | Uint8Array | number[], privateKey: Uint8Array, options?: AlgOption): Promise<Uint8Array> {
     const sk = dataview.u8ToHex(privateKey)
     if (content instanceof Uint8Array) {
       content = Array.from(content)
     }
-    const signature = sm2.doSignature(content, sk)
+    const hash = options?.hash ?? false
+    const der = options?.hash ?? false
+    const signature = sm2.doSignature(content, sk, { hash, der })
+
     const ret = dataview.hexToU8(signature)
     return Promise.resolve(ret)
   }
 
-  verify(msg: string | Uint8Array | number[], sigValueHex: string, publicKey: Uint8Array): Promise<boolean> {
+  verify(
+    msg: string | Uint8Array | number[],
+    sigValueHex: string,
+    publicKey: Uint8Array,
+    options?: AlgOption,
+  ): Promise<boolean> {
     const pk = dataview.u8ToHex(publicKey)
     if (msg instanceof Uint8Array) {
       msg = Array.from(msg)
     }
-    const ret = sm2.doVerifySignature(msg, sigValueHex, pk)
+    const hash = options?.hash ?? false
+    const der = options?.hash ?? false
+    const ret = sm2.doVerifySignature(msg, sigValueHex, pk, { hash, der })
     return Promise.resolve(ret)
   }
 }

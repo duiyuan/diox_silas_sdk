@@ -1,3 +1,4 @@
+import { AlgOption } from './../utils/address/base'
 import { encode } from 'base64-arraybuffer'
 import { sha256 } from 'js-sha256'
 import base32Encode from 'base32-encode'
@@ -45,7 +46,7 @@ class Transaction {
     return ret.TxData
   }
 
-  async sign(originalTxn: OriginalTxn, secretKey: Uint8Array) {
+  async sign(originalTxn: OriginalTxn, secretKey: Uint8Array, option?: AlgOption) {
     const dioAddress = new DIOAddress(this.alg, secretKey)
     const txdata = await this.compose(originalTxn)
 
@@ -65,10 +66,10 @@ class Transaction {
       { encryptedMethodOrderNumber: dioAddress.methodNum, publicKey: pk },
     ])
     const raw = encode(dataWithPK)
-    const signedInfo = await dioAddress.sign(dataWithPK, secretKey)
+    const signedInfo = await dioAddress.sign(dataWithPK, secretKey, option)
     const signature = dataview.u8ToHex(signedInfo)
 
-    const isValid = await dioAddress.verifySignature(dataWithPK, signature, longPK!)
+    const isValid = await dioAddress.verifySignature(dataWithPK, signature, longPK!, option)
     if (!isValid) {
       throw new Error('sign error')
     }
@@ -85,6 +86,7 @@ class Transaction {
       longPK: encode(longPK!),
       rawTxData: encode(finalInfowithNonce),
       hash: hash.toLowerCase(),
+      pk: encode(pk),
     }
   }
 

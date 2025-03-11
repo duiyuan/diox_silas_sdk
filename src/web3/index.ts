@@ -4,7 +4,6 @@ import { Transaction } from './transaction'
 import provider from '../api/provider'
 import Blocks from '../api/block'
 import Overview from '../api/overview'
-import { LIB_VERSION } from '../constants/version'
 
 class Web3 {
   private net: Provider
@@ -29,10 +28,6 @@ class Web3 {
   setProvider(net: Provider) {
     this.net = net
     provider.set(net)
-  }
-
-  static version() {
-    return LIB_VERSION
   }
 }
 

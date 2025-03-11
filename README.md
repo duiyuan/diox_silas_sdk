@@ -19,9 +19,10 @@ yarn add @dioxide-js/silas
 ## Getting Started
 
 ```js
-import { Web3, NET } from '@dioxide-js/silas'
+import { Web3 } from '@dioxide-js/silas'
 
-const web3 = new Web3(NET.TEST)
+const endpoint = 'https://xxxx'
+const web3 = new Web3(endpoint)
 
 // Get the balance of an address
 const balance = await web3.addr.getBalance('0x1234567890abcdef1234567890abcdef12345678')
