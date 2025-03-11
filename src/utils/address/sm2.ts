@@ -111,7 +111,10 @@ export default class DIOSM2 implements GenericAddress {
     if (content instanceof Uint8Array) {
       content = Array.from(content)
     }
-    const signature = sm2.doSignature(content, sk)
+    const signature = sm2.doSignature(content, sk, {
+      hash: false,
+      der: false,
+    })
     const ret = dataview.hexToU8(signature)
     return Promise.resolve(ret)
   }
@@ -121,7 +124,10 @@ export default class DIOSM2 implements GenericAddress {
     if (msg instanceof Uint8Array) {
       msg = Array.from(msg)
     }
-    const ret = sm2.doVerifySignature(msg, sigValueHex, pk)
+    const ret = sm2.doVerifySignature(msg, sigValueHex, pk, {
+      hash: false,
+      der: false,
+    })
     return Promise.resolve(ret)
   }
 }

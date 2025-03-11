@@ -85,6 +85,7 @@ class Transaction {
       longPK: encode(longPK!),
       rawTxData: encode(finalInfowithNonce),
       hash: hash.toLowerCase(),
+      pk: encode(pk),
     }
   }
 
