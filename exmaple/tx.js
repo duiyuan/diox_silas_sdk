@@ -18,6 +18,12 @@ const user_1 = {
   sk_b64: '9JV6rrhtNuWl70lCREk7TmVOwhAMZTPzfJLbXtx0niA=',
 }
 
+const user_2 = {
+  pk: 'BBoJi1+6c8ffd0EHYyPcY0yzDEyk/7xScA+jOYGM+iufWwrpNlu8KSWuuHKsumWPc63H4dAIj7f30gXgYNBHIgI=',
+  sk: 'gM9apQFc258MdP4U9ieeHrX0JSTo5NbArhDJuMiPyD8=',
+  address: 'he4aa9gxmjge11axxh3r0jetj8scz9j569pkm1x2tykvm7a035z59tdwem:sm2',
+}
+
 signTxn()
   .then((rsp) => {
     console.log(rsp)
@@ -36,7 +42,8 @@ async function generateAddress(alg, privatekey) {
 }
 
 async function signTxn() {
-  const result = await generateAddress('sm2', user_0.sk)
+  const hex = dataview.base64ToHex(user_2.sk)
+  const result = await generateAddress('sm2', hex)
 
   return web3.txn.transfer({
     to: user_1.address,
