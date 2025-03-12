@@ -19,9 +19,9 @@ const user_1 = {
 }
 
 const user_2 = {
-  pk: 'BBoJi1+6c8ffd0EHYyPcY0yzDEyk/7xScA+jOYGM+iufWwrpNlu8KSWuuHKsumWPc63H4dAIj7f30gXgYNBHIgI=',
-  sk: 'gM9apQFc258MdP4U9ieeHrX0JSTo5NbArhDJuMiPyD8=',
-  address: 'he4aa9gxmjge11axxh3r0jetj8scz9j569pkm1x2tykvm7a035z59tdwem:sm2',
+  pk: 'IcMrKpsPg/qyHPGFM+XEJsLbX7Y06M7K22XCtIsBR5B7qsDdfzxTH5t2sWx61h7codzKi2jVaq+GUFqEIENuyw==',
+  sk: 'jlELfhsLy8l5iknO5wWYmrEl34qhkyNh5Gf1CsyQZpk=',
+  address: 'ew0wj1ew8ct8tvsgqj8ch4gwmea0506wp8pq68nd5v54wgqa9csj9f6hxm:sm2',
 }
 
 signTxn()
@@ -36,8 +36,8 @@ async function generateAddress(alg, privatekey) {
   const { sk, pk, address, sku8, pku8, lpku8 } = await new DIOAddress(alg, sk_u8).generate()
   const p = dataview.u8ToBase64(pku8)
   const lpk = dataview.u8ToBase64(lpku8)
-  console.log(p)
-  console.log(lpk)
+  console.log('64b =>', p)
+  console.log('65b =>', lpk)
   return { sk, pk, address, sk_u8: sku8 }
 }
 
