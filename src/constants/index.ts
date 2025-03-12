@@ -40,13 +40,6 @@ export function getDefaultToken() {
 }
 
 export enum NET {
-  MAIN = 'main',
-  TEST = 'test',
-}
-
-export function getProvider(net: Provider) {
-  if (net === NET.MAIN) {
-    return 'http://127.0.0.1:7600'
-  }
-  return 'http://127.0.0.1:7600'
+  MAIN = 'http://127.0.0.1:7600',
+  TEST = 'http://101.33.210.216:7600',
 }
