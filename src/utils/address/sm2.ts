@@ -35,11 +35,12 @@ export default class DIOSM2 implements GenericAddress {
     const sku8 = dataview.hexToU8(sk!)
 
     const pku8 = publickKeyU8[0] === 4 ? publickKeyU8.slice(1) : publickKeyU8
+    const lpk8 = publickKeyU8[0] === 4 ? publickKeyU8 : dataview.concat(new Uint8Array([4]), publickKeyU8)
     const u8 = this.hash(pku8, algHash)
 
     const o = this.pkToDIOStruct(u8)
     const address = base32Encode(o.address, 'Crockford').toLowerCase() + ':sm2'
-    const ret = { pk, sk, pku8: publickKeyU8, sku8, address }
+    const ret = { pk, sk, pku8: publickKeyU8, sku8, address, lpku8: lpk8 }
     return Promise.resolve(ret)
   }
 
