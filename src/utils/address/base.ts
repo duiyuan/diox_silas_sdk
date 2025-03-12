@@ -6,6 +6,7 @@ export interface AddressGenerated {
   pku8: Uint8Array
   sku8: Uint8Array
   address: string
+  lpku8?: Uint8Array
 }
 
 export type Hex = string

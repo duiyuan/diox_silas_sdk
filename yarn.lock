@@ -283,10 +283,10 @@
   resolved "https://registry.npmmirror.com/@blakeembrey/template/-/template-1.2.0.tgz#acd948eb29334e882019e8876b42ff6da1dcf528"
   integrity sha512-w/63nURdkRPpg3AXbNr7lPv6HgOuVDyefTumiXsbXxtIwcuk5EXayWR5OpSwDjsQPgaYsfUSedMduaNOjAYY8A==
 
-"@dioxide-js/misc@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.npmmirror.com/@dioxide-js/misc/-/misc-0.2.3.tgz#a8037243fea66ef961c2a42612939762b32e9bbf"
-  integrity sha512-XtiGOPgR+zF+XOCRp3fUJ86qtKkvcDEx0aPjzk3IGq5PBwx12Iupj7t5v/eDzGQvXZK94EqbMnKpDyCG0X1KhA==
+"@dioxide-js/misc@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@dioxide-js/misc/-/misc-0.3.2.tgz#7803948cf32238aefc73074aae5caba813dbcd46"
+  integrity sha512-YzS0AydpS+hUMxoO6yIR7Y+6d/Yv2TyBhUP8MYhZlHszgQo4hwEf14hZ2CVpZxWHzi+SWf2FWzMWQkcSYxWHRg==
   dependencies:
     base32-decode "^1.0.0"
     base32-encode "^2.0.0"
@@ -1293,11 +1293,6 @@ doctrine@^3.0.0:
   integrity sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==
   dependencies:
     esutils "^2.0.2"
-
-dotenv@^16.4.5:
-  version "16.4.5"
-  resolved "https://registry.npmmirror.com/dotenv/-/dotenv-16.4.5.tgz#cdd3b3b604cb327e286b4762e13502f717cb099f"
-  integrity sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==
 
 ejs@^3.1.10:
   version "3.1.10"

@@ -27,7 +27,11 @@ signTxn()
 async function generateAddress(alg, privatekey) {
   const sk_u8 = dataview.hexToU8(privatekey)
 
-  const { sk, pk, address, sku8 } = await new DIOAddress(alg, sk_u8).generate()
+  const { sk, pk, address, sku8, pku8, lpku8 } = await new DIOAddress(alg, sk_u8).generate()
+  const p = dataview.u8ToBase64(pku8)
+  const lpk = dataview.u8ToBase64(lpku8)
+  console.log(p)
+  console.log(lpk)
   return { sk, pk, address, sk_u8: sku8 }
 }
 
