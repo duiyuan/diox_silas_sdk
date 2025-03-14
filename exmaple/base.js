@@ -1,22 +1,28 @@
-const { Web3 } = require('../lib/commonjs/index.js')
+const { Web3, NET } = require('../lib/commonjs/index.js')
 
-const web3 = new Web3('http://localhost:7600')
-const user1 = 'cysxfbb3khcym79s2ewd653t7k0s9yvz94qyqfn16362htn8mwem7q8n6w:ed25519'
-const addr = 'core:dapp'
-const txnHash = 'zc2szptjcygmw2x0t1w066j5h7gfg71h2kdjwaf619khe2cdmhtg'
+const web3 = new Web3(NET.TEST)
+const user1 = 'dwm1ycvfsa6d3vsrzne5nqyw420qtp8krxvbmddck8tyqqzvtamp9p8y54:sm2'
 
-web3.address.getISN(user1).then(console.log)
+async function Start() {
+  const status = await web3.overview.chainStatus()
+  console.log(`chain status =>`, status)
 
-web3.address.getTxnListByAddress({ address: user1 }).then(console.log).catch(console.error)
+  // Get ISN
+  const isn = await web3.address.getISN(user1)
+  console.log(`isn =>`, isn)
 
-web3.address
-  .getAddressState({ address: 'BRX:token', contract: 'core.profile.address' })
-  .then(console.log)
-  .catch(console.error)
+  // Get tranasctions by user address
+  const txnList = await web3.address.getTxnListByAddress({ address: user1 })
+  console.log(`txnList =>`, txnList)
 
-web3.address.getAddressInfo(addr).then(console.log).catch(console.error)
-web3.address.getBalance(user1).then(console.log).catch(console.error)
+  const recentlyTx = await web3.overview.getTxHistory({ limit: 1 })
+  console.log(`recentlyTxList =>`, recentlyTx)
 
-web3.overview.chainStatus().then(console.log).catch(console.error)
-web3.txn.getTxn(txnHash).then(console.log).catch(console.error)
-web3.blocks.getExcutedTx({ height: 30 }).then(console.log).catch(console.error)
+  const list = recentlyTx.ListData[0]
+  const tx = await web3.txn.getTx(list.TxnHash)
+  console.log(`tx detail =>`, tx.Content)
+}
+
+Start().catch((ex) => {
+  console.log('error: ', ex)
+})

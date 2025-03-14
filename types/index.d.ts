@@ -5,7 +5,11 @@ interface KeyValue<T = any> {
 }
 
 interface CommonResponse<T> {
-  Status: number
-  Message: string
-  Result: T
+  jsonrpc: '2.0'
+  error?: {
+    code: number
+    message: string
+  }
+  result: T
+  id: number | string | null
 }

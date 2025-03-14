@@ -1,6 +1,6 @@
 import { fullAddress, isValidAddress } from '../utils'
 import Request from './request'
-import { AddrBaseInfo, BalanceItem, DIOX, DioxScanTxResponse } from './type'
+import { AddrBaseInfo, BalanceItem, DIOX, TxSumList } from './type'
 
 type ListParmas = {
   address?: string
@@ -32,7 +32,7 @@ class AddressService extends Request {
   }
 
   getTxnListByAddress(params?: ListParmas) {
-    return this.post<DioxScanTxResponse>('chain.address_listtxn', params)
+    return this.post<TxSumList>('chain.address_listtxn', params)
   }
 
   getAddressState(data: { address: string; contract: string }) {

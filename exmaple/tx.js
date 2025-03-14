@@ -18,6 +18,12 @@ const user_1 = {
   sk_b64: '9JV6rrhtNuWl70lCREk7TmVOwhAMZTPzfJLbXtx0niA=',
 }
 
+const user_2 = {
+  pk: 'IcMrKpsPg/qyHPGFM+XEJsLbX7Y06M7K22XCtIsBR5B7qsDdfzxTH5t2sWx61h7codzKi2jVaq+GUFqEIENuyw==',
+  sk: 'jlELfhsLy8l5iknO5wWYmrEl34qhkyNh5Gf1CsyQZpk=',
+  address: 'ew0wj1ew8ct8tvsgqj8ch4gwmea0506wp8pq68nd5v54wgqa9csj9f6hxm:sm2',
+}
+
 signTxn()
   .then((rsp) => {
     console.log(rsp)
@@ -30,13 +36,14 @@ async function generateAddress(alg, privatekey) {
   const { sk, pk, address, sku8, pku8, lpku8 } = await new DIOAddress(alg, sk_u8).generate()
   const p = dataview.u8ToBase64(pku8)
   const lpk = dataview.u8ToBase64(lpku8)
-  console.log(p)
-  console.log(lpk)
+  console.log('64b =>', p)
+  console.log('65b =>', lpk)
   return { sk, pk, address, sk_u8: sku8 }
 }
 
 async function signTxn() {
-  const result = await generateAddress('sm2', user_0.sk)
+  const hex = dataview.base64ToHex(user_2.sk)
+  const result = await generateAddress('sm2', hex)
 
   return web3.txn.transfer({
     to: user_1.address,
