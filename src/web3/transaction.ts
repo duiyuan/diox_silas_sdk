@@ -2,18 +2,18 @@ import { AlgOption } from './../utils/address/base'
 import { encode } from 'base64-arraybuffer'
 import { sha256 } from 'js-sha256'
 import base32Encode from 'base32-encode'
+import { dataview } from '@dioxide-js/misc'
 
 import TransactionService from '../api/transactions'
-import { DIOAddress, Alg } from '../utils'
+import { DIOAddress, Alg, toUint8Array } from '../utils'
 import PowDifficulty from '../utils/powDifficulty'
 import OverviewService from '../api/overview'
 import { OriginalTxn } from '../api/type'
-import { dataview } from '@dioxide-js/misc'
 
 export interface TransferDIOParams {
   to: string
   amount: string
-  secretKey: Uint8Array
+  secretKey: Uint8Array | string
   ttl?: number
 }
 
@@ -21,7 +21,7 @@ export interface TransferFCAParams {
   symbol: string
   to: string
   amount: string
-  secretKey: Uint8Array
+  secretKey: Uint8Array | string
   ttl?: number
 }
 
@@ -46,7 +46,10 @@ class Transaction {
     return ret.TxData
   }
 
-  async sign(originalTxn: OriginalTxn, secretKey: Uint8Array, option?: AlgOption) {
+  async sign(originalTxn: OriginalTxn, secretKey: Uint8Array | string, option?: AlgOption) {
+    if (typeof secretKey === 'string') {
+      secretKey = toUint8Array(secretKey)
+    }
     const dioAddress = new DIOAddress(this.alg, secretKey)
     const txdata = await this.compose(originalTxn)
 
@@ -90,7 +93,7 @@ class Transaction {
     }
   }
 
-  async send(originTxn: OriginalTxn, secretKey: Uint8Array) {
+  async send(originTxn: OriginalTxn, secretKey: Uint8Array | string) {
     const { rawTxData } = await this.sign(originTxn, secretKey)
     const ret = await this.txnServices.sendTransaction({
       txdata: rawTxData,
@@ -154,10 +157,10 @@ class Transaction {
     )
   }
 
-  private async sk2base32Address(sk: Uint8Array, alg: Alg) {
-    // const pk = await ed.getPublicKey(sk)
-    // const { address } = pk2Address(pk)
-    // return fullAddress(base32Encode(address, 'Crockford').toLocaleLowerCase())
+  private async sk2base32Address(sk: Uint8Array | string, alg: Alg) {
+    if (typeof sk === 'string') {
+      sk = toUint8Array(sk)
+    }
     const dioAddress = new DIOAddress(alg, sk)
     const { address } = await dioAddress.generate()
     return address.toLowerCase()

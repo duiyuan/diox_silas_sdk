@@ -1,3 +1,6 @@
+import { dataview } from '@dioxide-js/misc'
+import isBase64 from 'is-base64'
+
 export function concat(...args: ArrayBuffer[]) {
   let length = 0
   const units = args.map((arg) => {
@@ -39,4 +42,21 @@ export function areUint8ArraysEqual(arr1: Uint8Array, arr2: Uint8Array) {
   }
 
   return true
+}
+
+export function toUint8Array(s: string | Uint8Array) {
+  if (s instanceof Uint8Array) {
+    return s
+  }
+
+  if (s.startsWith('0x')) {
+    s = s.replace(/^0x/, '')
+    return dataview.hexToU8(s)
+  }
+
+  if (isBase64(s)) {
+    return dataview.base64ToU8(s)
+  }
+
+  throw `illegal input, expect base64-string, base16-string or Uint8Array`
 }
