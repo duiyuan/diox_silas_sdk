@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.18](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.17...v0.1.18) (2025-03-14)
+
+### [0.1.17](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.16...v0.1.17) (2025-03-12)
+
+### [0.1.16](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.15...v0.1.16) (2025-03-12)
+
+
+### Bug Fixes
+
+* 64bytes publickey ([3151b46](https://github.com/duiyuan/diox_silas_sdk/commit/3151b46271ac65448a304942259bc9d6c2561326))
+
+### [0.1.15](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.14...v0.1.15) (2025-03-12)
+
+
+### Bug Fixes
+
+* hash not used ([15ddc7a](https://github.com/duiyuan/diox_silas_sdk/commit/15ddc7a50b086298e6b1a0d3dc4a32f3e39bf5d6))
+
+### [0.1.14](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.13...v0.1.14) (2025-03-12)
+
+### [0.1.13](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.12...v0.1.13) (2025-03-12)
+
+### [0.1.12](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.11...v0.1.12) (2025-03-12)
+
 ### [0.1.11](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.10...v0.1.11) (2025-03-11)
 
 
