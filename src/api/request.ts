@@ -25,7 +25,7 @@ export default class Fetcher {
       body: stringify(body),
       timeout: TIMEOUT,
     }
-    const resp = await fetch(dioxide + '/api/jsonrpc/v1', options)
+    const resp: CommonResponse<T> = await fetch(dioxide + '/api/jsonrpc/v1', options)
       .then(checkStatus)
       .then((r) => r.json())
 
@@ -45,7 +45,7 @@ export default class Fetcher {
       body: stringify(body),
       timeout: TIMEOUT,
     }
-    const resp = await fetch(dioxide + '/api/jsonrpc/v1', options)
+    const resp: CommonResponse<T> = await fetch(dioxide + '/api/jsonrpc/v1', options)
       .then(checkStatus)
       .then((r) => r.json())
 

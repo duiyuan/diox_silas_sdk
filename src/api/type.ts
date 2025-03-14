@@ -14,7 +14,11 @@ export declare namespace DIOX {
     }
   }
 
-  interface TxSummary {
+  interface TxListSumItems {
+    ListData: TxSumItem[]
+  }
+
+  interface TxSumItem {
     Height: number
     ShardIndex: number
     ExecIndex: number
@@ -29,6 +33,7 @@ export declare namespace DIOX {
     Invocation: Invocation
     TxnTime: number
     Func: string
+    Contract: string
   }
 
   interface DepositTxSum {
@@ -253,10 +258,10 @@ export interface TxDetailResponse {
   Content: DIOX.TxDetail
 }
 
-export type DioxScanTxResponse = CommonResponse<{
+export type TxSumList = {
   TotalNum: number
-  ListData: DIOX.TxSummary[]
-}>
+  ListData: DIOX.TxSumItem[]
+}
 
 export interface TokenItem {
   Address?: string
@@ -292,3 +297,21 @@ export type Override = CommonResponse<{
   Height: number
   NextISN: number
 }>
+
+export declare namespace DIOXScanReq {
+  interface Paging {
+    limit?: number
+    pos?: number
+  }
+
+  interface BlockList extends Paging {
+    height: number
+    shardindex: number
+  }
+
+  interface History extends Paging {
+    shardindex?: number
+    contract?: string
+    function?: string
+  }
+}

@@ -1,5 +1,5 @@
 import Request from './request'
-import { DIOX } from './type'
+import { DIOX, TxSumList, DIOXScanReq } from './type'
 
 class OverviewService extends Request {
   async chainStatus() {
@@ -10,6 +10,10 @@ class OverviewService extends Request {
   async getGasPrice() {
     const Result = await this.chainStatus()
     return Result.AvgGasPrice || 0
+  }
+
+  getTxHistory = async (params: DIOXScanReq.History): Promise<TxSumList> => {
+    return this.post('chain.txn_history', params)
   }
 }
 

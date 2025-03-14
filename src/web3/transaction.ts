@@ -37,7 +37,7 @@ class Transaction {
     this.alg = alg
   }
 
-  async getTxn(hash: string) {
+  getTx = async (hash: string) => {
     return this.txnServices.getTransactionByHash(hash)
   }
 
@@ -136,41 +136,6 @@ class Transaction {
     return gasFee
   }
 
-  // getDepositTxByBlock(params: ExcutedTxCond) {
-  //   return this.txnServices.getDepositTx(params)
-  // }
-
-  // async reclaimWallet({
-  //   refund,
-  //   residual = false,
-  //   residualToken = 'XXX',
-  //   secretKeyArray,
-  // }: {
-  //   refund: boolean
-  //   residual?: boolean
-  //   residualToken?: string
-  //   secretKeyArray: Uint8Array
-  // }) {
-  //   const pk = await ed.getPublicKey(secretKeyArray)
-  //   const { address } = pk2Address(pk)
-  //   const sender = fullAddress(
-  //     base32Encode(address, 'Crockford').toLocaleLowerCase(),
-  //   )
-  //   return this.send(
-  //     {
-  //       sender,
-  //       gasprice: 100,
-  //       function: 'core.wallet.reclaim',
-  //       args: {
-  //         Refund: refund,
-  //         Residual: residual,
-  //         Token: residualToken,
-  //       },
-  //     },
-  //     secretKeyArray,
-  //   )
-  // }
-
   async transfer(params: TransferDIOParams) {
     const { to, amount, secretKey, ttl } = params
     const sender = await this.sk2base32Address(secretKey, this.alg)
@@ -182,25 +147,6 @@ class Transaction {
         args: {
           To: to,
           Amount: amount,
-        },
-        ttl,
-      },
-      secretKey,
-    )
-  }
-
-  async transferFCA(params: TransferFCAParams) {
-    const { symbol, to, amount, secretKey, ttl } = params
-    const sender = await this.sk2base32Address(secretKey, this.alg)
-    return this.send(
-      {
-        sender,
-        gasprice: 100,
-        function: 'core.wallet.transfer',
-        args: {
-          To: to,
-          Amount: amount,
-          TokenId: symbol,
         },
         ttl,
       },
