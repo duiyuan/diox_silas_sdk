@@ -91,7 +91,7 @@ class Transaction {
   }
 
   async send(originTxn: OriginalTxn, secretKey: Uint8Array) {
-    const { rawTxData, hash } = await this.sign(originTxn, secretKey)
+    const { rawTxData } = await this.sign(originTxn, secretKey)
     const ret = await this.txnServices.sendTransaction({
       txdata: rawTxData,
     })
