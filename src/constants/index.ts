@@ -44,7 +44,7 @@ export function getDefaultToken() {
 }
 
 export enum NET {
-  MAIN = 'http://127.0.0.1:7600',
+  MAIN = 'https://<the_production_host>',
   TEST = 'http://101.33.210.216:7600',
   LOCAL = 'http://127.0.0.1:7600',
 }
