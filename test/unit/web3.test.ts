@@ -86,6 +86,25 @@ describe('Utils Tests', () => {
   })
 })
 
+describe('Proof Module Tests', () => {
+  it('new proof', async () => {
+    const txnHash = await web3.proof.newProof({
+      content: 'sdk unit test',
+      key: 'test234',
+      sender: '795csryp16ep27cwbhqnj510ddkv904n961kat1tm2vswp37xf878by600:sm2',
+      secretKey: new Uint8Array(decode('gMAsFkh3C6Q63XAd+MoZC7BUrQTCAi8DAEzHGDXJOqc=')),
+    })
+    expect(txnHash).not.toBeNull()
+  })
+
+  it('get proof', async () => {
+    const proofs = await web3.proof.getProofs({
+      owner: '795csryp16ep27cwbhqnj510ddkv904n961kat1tm2vswp37xf878by600:sm2',
+    })
+    expect(proofs).not.toBeNull()
+  })
+})
+
 describe('Account Module Tests', () => {
   it('account.generate(sm2)', async () => {
     const result = await web3.account.generate('sm2')
@@ -135,21 +154,4 @@ describe('Web3 Unit Test', () => {
     })
     expect(txnHash).not.toBeNull()
   })
-
-  // it('new proof', async () => {
-  //   const txnHash = await web3.proof.newProof({
-  //     content: 'sdk unit test',
-  //     key: 'test234',
-  //     sender: '795csryp16ep27cwbhqnj510ddkv904n961kat1tm2vswp37xf878by600:sm2',
-  //     secretKey: new Uint8Array(decode('gMAsFkh3C6Q63XAd+MoZC7BUrQTCAi8DAEzHGDXJOqc=')),
-  //   })
-  //   expect(txnHash).not.toBeNull()
-  // })
-
-  // it('get proof', async () => {
-  //   const proofs = await web3.proof.getProofs({
-  //     owner: '795csryp16ep27cwbhqnj510ddkv904n961kat1tm2vswp37xf878by600:sm2',
-  //   })
-  //   expect(proofs).not.toBeNull()
-  // })
 })
