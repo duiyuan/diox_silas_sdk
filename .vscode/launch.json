@@ -21,6 +21,12 @@
       "name": "ex:tx",
       "request": "launch",
       "type": "node-terminal"
+    },
+    {
+      "command": "npm run test",
+      "name": "test",
+      "request": "launch",
+      "type": "node-terminal"
     }
   ]
 }

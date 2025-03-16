@@ -1,4 +1,5 @@
-import { fullAddress, isValidAddress } from '../utils'
+import { Alg, DIOAddress, fullAddress, isUndefined, isValidAddress, toUint8Array } from '../utils'
+import { AddressGenerated } from '../utils/address/base'
 import Request from './request'
 import { AddrBaseInfo, BalanceItem, DIOX, TxSumList } from './type'
 
@@ -22,6 +23,13 @@ class AddressService extends Request {
     if (!address || !isValidAddress(address)) {
       throw new Error('Address is not valid')
     }
+  }
+
+  async generate(alg: Alg = 'sm2', privatekey?: Uint8Array | string): Promise<AddressGenerated> {
+    const pk = privatekey ? toUint8Array(privatekey) : undefined
+    const dioAddress = new DIOAddress(alg, pk)
+    const result = await dioAddress.generate()
+    return result
   }
 
   async getISN(address: string) {
@@ -53,6 +61,14 @@ class AddressService extends Request {
     this.checkAddress(fullAddr)
     const addr = fullAddr.replace(/#/g, '%23')
     return this.post<BalanceItem>('chain.address_balance', { address: addr })
+  }
+
+  getUserRegState(params: { address: string; id: string }) {
+    const { id, address } = params
+    if (isUndefined(id) && isUndefined(address)) {
+      throw `eigther 'id' or 'address' is required`
+    }
+    return this.post<boolean>('user.reg_state', { id, address })
   }
 }
 

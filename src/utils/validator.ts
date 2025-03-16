@@ -6,7 +6,7 @@ import { concat } from './buffer'
 export function validCRC(publicKey: Uint8Array, alg: string) {
   let code = 0
 
-  switch (alg.toLowerCase()) {
+  switch (alg?.toLowerCase()) {
     case 'ed25519':
       code = 0x3
       break

@@ -1,6 +1,7 @@
 import { NET } from '../constants'
 import Address from '../api/address'
 import { Transaction } from './transaction'
+import Account from './account'
 import provider from '../api/provider'
 import Blocks from '../api/block'
 import Overview from '../api/overview'
@@ -14,6 +15,7 @@ class Web3 {
   blocks: Blocks
   overview: Overview
   proof: Proof
+  account: Account
 
   constructor(net: Provider) {
     this.net = net || NET.TEST
@@ -24,8 +26,9 @@ class Web3 {
     this.overview = new Overview()
     this.txn = new Transaction()
     this.proof = new Proof()
+    this.account = new Account()
 
-    console.log('Dioxide initialized with net: ', this.net)
+    // console.log('Dioxide initialized with net: ', this.net)
   }
 
   setProvider(net: Provider) {
