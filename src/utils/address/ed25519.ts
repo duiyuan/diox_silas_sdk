@@ -6,6 +6,7 @@ import crc32c from 'crc-32/crc32c.js'
 import crypto from 'crypto'
 
 import GenericAddress, { encodeMnemonic, EncryptMethod, formatedSalt } from './base'
+import { toUint8Array } from '../buffer'
 
 export interface IaddressDetails {
   currency: string
@@ -37,14 +38,12 @@ export default class DIOEd25519 implements GenericAddress {
   constructor(options?: Options) {
     if (options?.privateKey) {
       const { privateKey } = options
-      if (!(privateKey instanceof Uint8Array)) {
-        throw `Illegal privatekey, expect Uint8Array`
-      }
+      const sk = toUint8Array(privateKey)
 
       this.salt = formatedSalt(this.saltRef)
       this.seed = this.generateSeed()
 
-      this.privateKeyU8 = this.get32bPrivateKey(options.privateKey)
+      this.privateKeyU8 = this.get32bPrivateKey(sk)
       this.privateKey = dataview.u8ToHex(this.privateKeyU8)
     }
   }

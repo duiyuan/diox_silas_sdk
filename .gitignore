@@ -130,7 +130,6 @@ dist
 
 
 # Distribution directory
-.vscode
 lib/
 dist/
 tsconfig.tsbuildinfo

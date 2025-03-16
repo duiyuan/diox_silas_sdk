@@ -1,0 +1,26 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "command": "npm run ex:base",
+      "name": "ex:base",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "command": "npm run ex:proof",
+      "name": "ex:proof",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "command": "npm run ex:tx",
+      "name": "ex:tx",
+      "request": "launch",
+      "type": "node-terminal"
+    }
+  ]
+}
