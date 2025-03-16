@@ -1,4 +1,5 @@
-import { fullAddress, isUndefined, isValidAddress } from '../utils'
+import { Alg, DIOAddress, fullAddress, isUndefined, isValidAddress, toUint8Array } from '../utils'
+import { AddressGenerated } from '../utils/address/base'
 import Request from './request'
 import { AddrBaseInfo, BalanceItem, DIOX, TxSumList } from './type'
 
@@ -22,6 +23,13 @@ class AddressService extends Request {
     if (!address || !isValidAddress(address)) {
       throw new Error('Address is not valid')
     }
+  }
+
+  async generate(alg: Alg = 'sm2', privatekey?: Uint8Array | string): Promise<AddressGenerated> {
+    const pk = privatekey ? toUint8Array(privatekey) : undefined
+    const dioAddress = new DIOAddress(alg, pk)
+    const result = await dioAddress.generate()
+    return result
   }
 
   async getISN(address: string) {

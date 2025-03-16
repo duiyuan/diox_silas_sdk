@@ -1,13 +1,13 @@
 module.exports = {
   rootDir: '../..',
   testMatch: ['<rootDir>/test/**/?(*.)+(spec|test).+(ts|tsx|js)'],
-  // setupFilesAfterEnv: ['<rootDir>/test/setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
   transform: {
     '^.+\\.(ts|tsx)$': [
       'ts-jest',
       {
         tsconfig: './test/tsconfig.json',
-        useESM: true
+        useESM: true,
       },
     ],
   },
@@ -42,4 +42,4 @@ module.exports = {
    */
   resetModules: true,
   testTimeout: 600000,
-};
+}
