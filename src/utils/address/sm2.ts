@@ -5,6 +5,7 @@ import base32Encode from 'base32-encode'
 import sha256 from 'sha256'
 
 import GenericAddress, { EncryptMethod, AlgOption } from './base'
+import { toUint8Array } from '../buffer'
 
 const sm2 = smcrypto.sm2
 const sm3 = (smcrypto as any).default.sm3
@@ -22,10 +23,8 @@ export default class DIOSM2 implements GenericAddress {
   constructor(options?: Options) {
     if (options?.privateKey) {
       const { privateKey } = options
-      if (!(privateKey instanceof Uint8Array)) {
-        throw `Illegal privatekey, expect Uint8Array`
-      }
-      this.privateKey = dataview.u8ToHex(options.privateKey) //this.trim(options?.privateKey)
+      const sk = toUint8Array(privateKey)
+      this.privateKey = dataview.u8ToHex(sk)
     }
   }
 

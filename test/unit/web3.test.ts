@@ -78,6 +78,23 @@ describe("web3 unit test", () => {
     expect(txnHash).not.toBeNull()
   })
 
+  it('new proof', async () => {
+    const txnHash = await web3.proof.newProof({
+      content: 'sdk unit test',
+      key: 'test234',
+      sender: '795csryp16ep27cwbhqnj510ddkv904n961kat1tm2vswp37xf878by600:sm2',
+      secretKey: new Uint8Array(decode('gMAsFkh3C6Q63XAd+MoZC7BUrQTCAi8DAEzHGDXJOqc=')),
+  })
+    expect(txnHash).not.toBeNull()
+  })
+
+  it('get proof', async () => {
+    const proofs = await web3.proof.getProofs({
+    owner: '795csryp16ep27cwbhqnj510ddkv904n961kat1tm2vswp37xf878by600:sm2'
+  })
+    expect(proofs).not.toBeNull()
+  })
+
   /** utils */
 
   it('to token amount', () => {

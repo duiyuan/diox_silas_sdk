@@ -290,6 +290,22 @@ export interface Blocks {
   ListData: DIOX.Block[]
 }
 
+export interface Proof {
+  TxHash: string
+  ProofHash: string
+  InputKey: string
+  Timestamp: number
+  Owner: string
+  Content: string
+}
+
+export interface GetProofsParams {
+  TxHash?: string
+  ProofHash?: string
+  InputKey?: string
+  Owner?: string
+}
+
 export type DioxScanChainBasicInfo = CommonResponse<DIOX.ChainStatus>
 
 export type Override = CommonResponse<{

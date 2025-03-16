@@ -36,7 +36,8 @@
     "test": "jest --clearCache && jest --config ./test/unit/jest.config.js",
     "watch": "onchange \"src/**/*\" -e \"src/constants/version.ts\" -- yarn build",
     "ex:base": "node exmaple/base.js",
-    "ex:tx": "node exmaple/tx.js"
+    "ex:tx": "node exmaple/tx.js",
+    "ex:proof": "node exmaple/proof.js"
   },
   "author": "dioxide",
   "license": "MIT",

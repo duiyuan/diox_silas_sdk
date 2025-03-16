@@ -30,6 +30,10 @@ export enum DioFunction {
   WALLET_CORE_DEPOSIT = 'core.coin.address.deposit',
   WALLET_DEPOSIT = 'core.wallet.address.deposit',
   WALLET_BITREXE_DEPOSIT = 'rxbridge.BitReXe.address._deposit',
+  PROOF_NEW = 'silas.ProofOfExistence.new',
+  PROOF_NEW_BY_PROOFKEY = 'silas.ProofOfExistence.newByProofKey',
+  PROOF_CHECK = 'silas.ProofOfExistence.check',
+  PROOF_GET = 'silas.ProofOfExistence.get',
 }
 
 export function getDefaultToken() {
