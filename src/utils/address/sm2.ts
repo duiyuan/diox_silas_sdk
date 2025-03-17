@@ -39,7 +39,7 @@ export default class DIOSM2 implements GenericAddress {
 
     const o = this.pkToDIOStruct(u8)
     const address = base32Encode(o.address, 'Crockford').toLowerCase() + ':sm2'
-    const ret = { pk, sk, pku8, sku8, address, lpku8: lpk8 }
+    const ret = { publickey: pk, privatekey: sk, pku8, sku8, address, lpku8: lpk8 }
     return Promise.resolve(ret)
   }
 

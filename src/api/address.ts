@@ -1,7 +1,6 @@
 import { Alg, DIOAddress, fullAddress, isUndefined, isValidAddress, toUint8Array } from '../utils'
-import { AddressGenerated } from '../utils/address/base'
 import Request from './request'
-import { AddrBaseInfo, BalanceItem, DIOX, TxSumList } from './type'
+import { AddrBaseInfo, BalanceItem, DIOX, TxSumList, AddressGenerated } from './type'
 
 type ListParmas = {
   address?: string
