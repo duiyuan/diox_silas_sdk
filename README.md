@@ -103,7 +103,9 @@ const price = await web3.overview.getGasPrice()
 console.log(price) // output: 30000
 ```
 
-##### getTxHistory(p: params: DIOXScanReq.History): Promise\<TxSumList>
+##### getTxHistory(params?: DIOXScanReq.History): Promise\<TxSumList>
+
+Get recently transactions on blockchain.
 
 ```
 const list = await web3.overview.getTxHistory()
