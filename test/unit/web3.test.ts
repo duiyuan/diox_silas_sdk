@@ -53,7 +53,7 @@ describe('Web3 Tests', () => {
         },
         user0.privatekey,
       )
-      expect(raw).not.toBeNull()
+      expect(raw.signature).not.toBeNull()
     })
 
     it('sign data & send txn & get txn hash', async () => {
@@ -119,8 +119,8 @@ describe('Web3 Tests', () => {
     it('account.generate(sm2)', async () => {
       const result = await web3.account.generate('sm2')
 
-      expect(result.sk).toBeString()
-      expect(result.pk).toBeString()
+      expect(result.privatekey).toBeString()
+      expect(result.publickey).toBeString()
 
       expect(result.sku8.length).toEqual(32)
       expect(result.pku8.length).toEqual(64)

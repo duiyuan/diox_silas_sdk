@@ -38,7 +38,7 @@ const privatekeyU8 = dataview.base64ToU8(user0.privatekey)
 
 ### Proofs
 
-#### newProof(p: NewProofByProofHashParams): Promise\<string\>
+##### newProof(p: NewProofByProofHashParams): Promise\<string\>
 
 To set a proof and retrieve tx hash as result.
 
@@ -51,7 +51,7 @@ const txnHash = await web3.proof.newProof({
 })
 ```
 
-#### getProofs(p: GetProofsParams): Promise\<Proof\>
+##### getProofs(p: GetProofsParams): Promise\<Proof\>
 
 ```
 const proofs = await web3.proof.getProofs({
@@ -114,8 +114,12 @@ console.log(isn) // output: 8
 
 ##### getTxnListByAddress(params?: ListParmas): Promise\<TxSumList>
 
+Get the list of transactions related to the address (summary information).
+
 ```
-const list = await web3.address.getTxnListByAddress()
+const list = await web3.address.getTxnListByAddress({
+  address: user0.address
+})
 ```
 
 ##### getAddressState(data: { address: string; contract: string }): Promise\<AddrBaseInfo>
@@ -123,6 +127,13 @@ const list = await web3.address.getTxnListByAddress()
 ```
 const state = await web3.address.getAddressState({address: user0.address})
 console.log(state)
+```
+
+##### getAddressInfo(address: string): Promise\<DIOX.Address>
+
+```
+const profile = await web3.address.getAddressInfo({address: user0.address})
+console.log(profile)
 ```
 
 ## Block
@@ -134,9 +145,33 @@ const tx = await web3.block.getExcutedTx()
 console.log(tx)
 ```
 
+##### detail(hash: string): Promise\<DIOX.Block>
+
+```
+const detail = await web3.block.detail()
+console.log(detail)
+```
+
 ## Transaction
 
-### sign(originalTxn: OriginalTxn, secretKey: Uint8Array | string, option?: AlgOption): Promise\<SignedData>
+##### getTx(hash: string): Promise\<DIOX.TxDetail>
+
+```
+const detail = await web3.txn.getTx("a9cdzqythgtn8078ejhghb74f6s8x9k9v0rcn13azt1fp19wcftg")
+cosnole.log(detail)
+// output:
+{
+  "ISN": 2,
+  "TTL": 1800000,
+  "Hash": "a9cdzqythgtn8078ejhghb74f6s8x9k9v0rcn13azt1fp19wcftg",
+  "Mode": "ITM_FIRST_SIGNER|TGM_USER_SIGNED",
+  "Size": 181,
+  ...
+}
+
+```
+
+##### sign(originalTxn: OriginalTxn, secretKey: Uint8Array | string, option?: AlgOption): Promise\<SignedData>
 
 Construct and sign the transaction locally using the private key. Return the signed result. The private key will not be transmitted over the network.
 
@@ -160,7 +195,7 @@ console.log(data)
 }
 ```
 
-### send(originTxn: OriginalTxn, secretKey: Uint8Array | string): Promise\<string>
+##### send(originTxn: OriginalTxn, secretKey: Uint8Array | string): Promise\<string>
 
 Send a transaction. The transaction will be constructed and signed locally using the private key, and the signed result will be broadcast to the blockchain. The private key will not be transmitted over the network.
 

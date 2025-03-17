@@ -12,6 +12,10 @@ class BlockSvc extends Request {
     const resp = await this.post<DIOX.ExcutedTx>('chain.txn_history', data)
     return resp
   }
+
+  async detail(hash: string) {
+    return this.post<DIOX.Block>('chain.block_detail', { hash })
+  }
 }
 
 export default BlockSvc
