@@ -9,7 +9,8 @@
     "dioxide",
     "web3",
     "blockchain",
-    "silas"
+    "silas",
+    "@dixodejs/silas"
   ],
   "exports": {
     ".": {
