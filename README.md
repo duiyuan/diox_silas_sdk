@@ -18,7 +18,7 @@ yarn add @dioxide-js/silas
 
 ## Getting Started
 
-All the [Type Declaration](./src/api/type.ts).
+All the [Type Declaration](./silas/src/api/type.ts).
 
 ### Initialize
 
@@ -71,7 +71,9 @@ console.log(result.pk, result.sk, result.address)
 ##### getRegState(p: RegsiterOption): Promise\<boolean>
 
 ```
-const registed = await web3.account.getRegState({address: user0.address})
+const registed = await web3.account.getRegState({
+  address: user0.address
+})
 ```
 
 ##### register(p: RegsiterOption): Promise\<boolean>
@@ -132,7 +134,9 @@ console.log(state)
 ##### getAddressInfo(address: string): Promise\<DIOX.Address>
 
 ```
-const profile = await web3.address.getAddressInfo({address: user0.address})
+const profile = await web3.address.getAddressInfo({
+  address: user0.address
+})
 console.log(profile)
 ```
 
