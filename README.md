@@ -58,6 +58,12 @@ const proofs = await web3.proof.getProofs({
 })
 ```
 
+##### checkProof(proofHash: string): Promise\<boolean\>
+
+```
+const proofs = await web3.proof.checkProof("ctz5ftg90cxm65j3ns5g4f99zezen9a73dkw2s7xspjbg19t4ax0")
+```
+
 #### Account
 
 ##### generate(alg: Alg = 'sm2', privatekey?: Uint8Array | string): Promise\<AddressGenerated\>
