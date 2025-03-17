@@ -4,7 +4,6 @@ import ProofService from '../api/proof'
 
 export interface NewProofParams {
   sender: string
-  secretKey: Uint8Array
   ttl?: number
   key: string
   content: string
@@ -12,7 +11,6 @@ export interface NewProofParams {
 
 export interface NewProofByProofHashParams {
   sender: string
-  secretKey: Uint8Array
   ttl?: number
   proof_key: string
   content: string
@@ -25,8 +23,11 @@ class Proof {
     this.tx = new Transaction()
     this.proofSvc = new ProofService()
   }
-  async newProof(params: NewProofParams) {
-    const { sender, secretKey, ttl, key, content } = params
+  async newProof(privatekey: string | Uint8Array, params: NewProofParams) {
+    const { sender, ttl, key, content } = params
+    if (!privatekey || !sender) {
+      throw `privatekey and sender is required`
+    }
     return this.tx.send(
       {
         sender,
@@ -38,12 +39,15 @@ class Proof {
         },
         ttl,
       },
-      secretKey,
+      privatekey,
     )
   }
 
-  async newProofByProofKey(params: NewProofByProofHashParams) {
-    const { sender, secretKey, ttl, proof_key, content } = params
+  async newProofByProofKey(privatekey: string | Uint8Array, params: NewProofByProofHashParams) {
+    const { sender, ttl, proof_key, content } = params
+    if (!privatekey || !sender) {
+      throw `privatekey and sender is required`
+    }
     return this.tx.send(
       {
         sender,
@@ -55,7 +59,7 @@ class Proof {
         },
         ttl,
       },
-      secretKey,
+      privatekey,
     )
   }
 
