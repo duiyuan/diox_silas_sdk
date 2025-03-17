@@ -1,13 +1,5 @@
+import { AddressGenerated } from '../../api/type'
 import dictionary from '../dictionary'
-
-export interface AddressGenerated {
-  pk: string
-  sk: string
-  pku8: Uint8Array
-  sku8: Uint8Array
-  address: string
-  lpku8?: Uint8Array
-}
 
 export type Hex = string
 export type EncryptMethod = 'ed25519' | 'sm2' | 'ecdsa'

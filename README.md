@@ -4,13 +4,13 @@
 
 ## Installation
 
-### Using NPM
+using npm
 
 ```bash
 npm install @dioxide-js/silas
 ```
 
-### Using Yarn
+using yarn
 
 ```bash
 yarn add @dioxide-js/silas
@@ -18,20 +18,162 @@ yarn add @dioxide-js/silas
 
 ## Getting Started
 
+All the [Type Declaration](./src/api/type.ts).
+
+### Initialize
+
 ```js
 import { Web3, NET } from '@dioxide-js/silas'
 import { dataview } from '@dioxide-js/misc'
 
 const web3 = new Web3(NET.TEST) // const web3 = new Web3(NET.MAIN); // For production
-const registedUser0 = {
-  privatekey: '2TDvtnWYrwFCu0fgIG2oXEIXhZ1LH7nMpVOdHJO3hL4=',
-  address: '919vj07v99y1g0k05rrxfawn47m4scjzsjtarvnx4z23j164ffjr98hqdc:sm2',
+const user0 = {
+  address: 'jjkw5p9fz7nk0zfy6171ch0dy8bk16mhgpwkdcrc4rpt4sfzpvht9za2qr:sm2',
+  privatekey: 'AyyogAYL5nVC5CsrTxdYe9IBXOppNqsGd+hSHn+QT68=',
+  id: 'stest01',
 }
 
-// Transfer dio
-const txnHash = await web3.txn.transfer({
-  to: 'ew0wj1ew8ct8tvsgqj8ch4gwmea0506wp8pq68nd5v54wgqa9csj9f6hxm:sm2',
-  amount: '10000000000',
-  secretKey: dataview.base64ToU8(registedUser0.privatekey),
+const privatekeyU8 = dataview.base64ToU8(user0.privatekey)
+```
+
+### Proofs
+
+#### newProof(p: NewProofByProofHashParams): Promise\<string\>
+
+To set a proof and retrieve tx hash as result.
+
+```
+const txnHash = await web3.proof.newProof({
+  content: 'sdk unit test',
+  key: 'test234',
+  sender: user0.address,
+  secretKey: user0.privatekey,
 })
+```
+
+#### getProofs(p: GetProofsParams): Promise\<Proof\>
+
+```
+const proofs = await web3.proof.getProofs({
+  owner: user0.address,
+})
+```
+
+#### Account
+
+##### generate(alg: Alg = 'sm2', privatekey?: Uint8Array | string): Promise\<AddressGenerated\>
+
+```
+const result = await web3.account.generate('sm2')
+console.log(result.pk, result.sk, result.address)
+```
+
+##### getRegState(p: RegsiterOption): Promise\<boolean>
+
+```
+const registed = await web3.account.getRegState({address: user0.address})
+```
+
+##### register(p: RegsiterOption): Promise\<boolean>
+
+```
+const registed = await web3.account.register({id: user0.id})
+```
+
+## Overview
+
+##### chainStatus(): Promise\<DIOX.ChainStatus>
+
+```
+const status = await web3.overview.chainStatus()
+console.log(status.Throughput) // output: 100.03
+```
+
+##### getGasPrice(): Promise\<number>
+
+```
+const price = await web3.overview.getGasPrice()
+console.log(price) // output: 30000
+```
+
+##### getTxHistory(p: params: DIOXScanReq.History): Promise\<TxSumList>
+
+```
+const list = await web3.overview.getTxHistory()
+console.log(list)
+```
+
+## Address
+
+##### getISN(address: string): Promise\<number>
+
+```
+const isn = await web3.address.getISN()
+console.log(isn) // output: 8
+```
+
+##### getTxnListByAddress(params?: ListParmas): Promise\<TxSumList>
+
+```
+const list = await web3.address.getTxnListByAddress()
+```
+
+##### getAddressState(data: { address: string; contract: string }): Promise\<AddrBaseInfo>
+
+```
+const state = await web3.address.getAddressState({address: user0.address})
+console.log(state)
+```
+
+## Block
+
+##### getExcutedTx(params: { height: number; limit?: number; pos?: number }): Promise\<DIOX.ExcutedTx | undefined>
+
+```
+const tx = await web3.block.getExcutedTx()
+console.log(tx)
+```
+
+## Transaction
+
+### sign(originalTxn: OriginalTxn, secretKey: Uint8Array | string, option?: AlgOption): Promise\<SignedData>
+
+Construct and sign the transaction locally using the private key. Return the signed result. The private key will not be transmitted over the network.
+
+```
+const data = await web3.txn.sign({
+  args: {
+    Amount: '200000000',
+    To: user1.address
+  },
+  function: 'core.coin.transfer',
+  gasprice: '100',
+  sender: user0.address,
+}, user0.privatekey)
+
+console.log(data)
+// output:
+{
+  signature: "FrPY1vIDx1CrpSiNbko3CPL...",
+  rawTxData: "QAD066yhlQEHA...",
+  hash: "5akjfknj9phq93r56kqygjcv3r1tpwm2gt82xex1z3nkrk4r509g",
+}
+```
+
+### send(originTxn: OriginalTxn, secretKey: Uint8Array | string): Promise\<string>
+
+Send a transaction. The transaction will be constructed and signed locally using the private key, and the signed result will be broadcast to the blockchain. The private key will not be transmitted over the network.
+
+```
+const data = aawait web3.txn.sign({
+  args: {
+    Amount: '200000000',
+    To: user1.address
+  },
+  function: 'core.coin.transfer',
+  gasprice: '100',
+  sender: user0.address,
+}, user0.privatekey)
+
+console.log(data) // output:  "5akjfknj9phq93r56kqygjcv3r1tpwm2gt82xex1z3nkrk4r509g"
 ```

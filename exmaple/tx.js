@@ -25,7 +25,7 @@ signTxn()
   .catch(console.error)
 
 async function generateAddress(alg, privatekey) {
-  const { sk, pk, address, sku8, pku8, lpku8 } = await new DIOAddress(alg, privatekey).generate()
+  const { privatekey: sk, publickey: pk, address, sku8, pku8, lpku8 } = await new DIOAddress(alg, privatekey).generate()
   const p = dataview.u8ToBase64(pku8)
   const lpk = dataview.u8ToBase64(lpku8)
   console.log('64b =>', p)

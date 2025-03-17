@@ -1,7 +1,7 @@
 import { Alg } from '../utils'
 import Address from '../api/address'
 import Request from '../api/request'
-import { AddressGenerated } from '../utils/address/base'
+import { AddressGenerated } from '../api/type'
 
 interface RegsiterOption {
   id: string
@@ -21,8 +21,8 @@ export default class Account extends Request {
     return this.address.generate(alg, privatekey)
   }
 
-  async register(options: RegsiterOption) {
-    return this.post<boolean>('user.register', options)
+  async register(options: RegsiterOption): Promise<Credential> {
+    return this.post<Credential>('user.register', options)
   }
 
   async getRegState(options: RegsiterOption) {

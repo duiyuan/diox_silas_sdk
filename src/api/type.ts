@@ -306,6 +306,18 @@ export interface GetProofsParams {
   Owner?: string
 }
 
+export interface Credential {
+  privatekey: string
+  publickey: string
+  address: string
+}
+
+export interface AddressGenerated extends Credential {
+  pku8: Uint8Array
+  sku8: Uint8Array
+  lpku8?: Uint8Array
+}
+
 export type DioxScanChainBasicInfo = CommonResponse<DIOX.ChainStatus>
 
 export type Override = CommonResponse<{

@@ -69,7 +69,7 @@ export default class ECDSA implements GenericAddress {
     const sk = dataview.u8ToHex(sku8)
     const pk = dataview.u8ToHex(pku8)
     const address = base32Encode(o.address, 'Crockford').toLowerCase() + ':' + this.encryptMethod
-    return { pk, sk, pku8, sku8, address }
+    return { publickey: pk, privatekey: sk, pku8, sku8, address }
   }
 
   getPubicKeyFromPrivateKey(privateKey: string | Uint8Array): Promise<Uint8Array> {

@@ -13,7 +13,7 @@ const user1 = {
   id: 'stest02',
 }
 
-const web3 = new Web3(NET.TEST)
+const web3 = new Web3(NET.LOCAL)
 
 describe('Web3 Tests', () => {
   beforeAll(async () => {
