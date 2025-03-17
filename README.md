@@ -38,16 +38,15 @@ const privatekeyU8 = dataview.base64ToU8(user0.privatekey)
 
 ### Proofs
 
-##### newProof(p: NewProofByProofHashParams): Promise\<string\>
+##### newProof(privatekey: string | Unit8Array, p: NewProofByProofHashParams): Promise\<string\>
 
 To set a proof and retrieve tx hash as result.
 
 ```
-const txnHash = await web3.proof.newProof({
+const txnHash = await web3.proof.newProof(user0.privatekey, {
   content: 'sdk unit test',
   key: 'test234',
   sender: user0.address,
-  secretKey: user0.privatekey,
 })
 ```
 

@@ -100,13 +100,12 @@ describe('Web3 Tests', () => {
 
   describe('Proof Module Tests', () => {
     it('new proof and get proofs', async () => {
-      const txnHash = await web3.proof.newProof({
+      const txnHash = await web3.proof.newProof(user0.privatekey, {
         content: 'sdk unit test',
         key: 'test234',
         sender: user0.address,
-        secretKey: user0.privatekey,
       })
-      expect(txnHash).not.toBeNull()
+      expect(txnHash).toBeString()
 
       const proofs = await web3.proof.getProofs({
         owner: user0.address,
