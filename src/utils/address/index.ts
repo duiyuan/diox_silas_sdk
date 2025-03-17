@@ -7,6 +7,7 @@ import DIOEd25519 from './ed25519'
 import ECDSA from './ecdsa'
 import GenericAddress, { AlgOption } from './base'
 import { areUint8ArraysEqual, concat } from '../buffer'
+import { AddressGenerated } from '../../api/type'
 
 export type Alg = 'sm2' | 'ed25519' | 'ecdsa'
 
@@ -51,7 +52,7 @@ export class DIOAddress {
     return this.instance!.getPubicKeyFromPrivateKey(privatekey)
   }
 
-  generate() {
+  generate(): Promise<AddressGenerated> {
     return this.instance!.generate()
   }
 
