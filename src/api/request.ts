@@ -1,53 +1,29 @@
-import fetch, { Response, RequestInit } from 'node-fetch'
-import { stringify } from '../utils/string'
+import axios, { AxiosRequestConfig } from 'axios'
 import provider from './provider'
 import { composeParams } from './rpc'
 
-const TIMEOUT = 30000 * 1000
-
-function checkStatus(response: Response) {
-  if (response.ok) {
-    return response
-  } else {
-    return Promise.reject(response)
-  }
-}
+const TIMEOUT = 30 * 1000
 
 export default class Fetcher {
   prune = (url: string) => (url.endsWith('/') ? url.slice(0, -1) : url)
 
-  async postToBC<T>(action: string, payload: { [key: string]: any }): Promise<T> {
-    const { dioxide } = provider.get()
-    const body = composeParams(action, true, payload)
-
-    const options: RequestInit = {
-      method: 'post',
-      body: stringify(body),
-      timeout: TIMEOUT,
-    }
-    const resp: CommonResponse<T> = await fetch(dioxide + '/api/jsonrpc/v1', options)
-      .then(checkStatus)
-      .then((r) => r.json())
-
-    const { error, result } = resp
-    if (error) {
-      throw error.message
-    }
-    return result
+  async postToBC<T>(action: string, payload: { [key: string]: any }, opts: AxiosRequestConfig = {}): Promise<T> {
+    return this.post(action, payload, true, opts)
   }
 
-  async post<T>(action: string, payload: any = {}, toBCRPC = false): Promise<T> {
+  async post<T>(action: string, payload: any = {}, toBC = false, opts: AxiosRequestConfig = {}): Promise<T> {
     const { dioxide } = provider.get()
-    const body = composeParams(action, false, payload)
+    const host = this.prune(dioxide)
+    const data = composeParams(action, toBC, payload)
 
-    const options: RequestInit = {
-      method: 'post',
-      body: stringify(body),
+    const options: AxiosRequestConfig = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
       timeout: TIMEOUT,
+      ...opts,
     }
-    const resp: CommonResponse<T> = await fetch(dioxide + '/api/jsonrpc/v1', options)
-      .then(checkStatus)
-      .then((r) => r.json())
+    const resp: CommonResponse<T> = await axios.post(host + '/api/jsonrpc/v1', data, options).then((r) => r.data)
 
     const { error, result } = resp
     if (error) {
