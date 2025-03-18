@@ -1,6 +1,6 @@
 {
   "name": "@dioxide-js/silas",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "RPC utility for Silas",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/esm/index.js",
