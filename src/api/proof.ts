@@ -8,7 +8,7 @@ class ProofSvc extends Request {
   }
 
   async checkProof(hash: string): Promise<boolean> {
-    const resp = await this.post<boolean>('proofs.check', hash)
+    const resp = await this.post<boolean>('proofs.check', { proof_hash: hash })
     return resp
   }
 }

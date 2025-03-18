@@ -35,7 +35,6 @@ web3.proof
   })
   .catch(console.error)
 
-web3.proof.getProofs({ owner: user.Address }).then(console.log).catch(console.error)
 function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
