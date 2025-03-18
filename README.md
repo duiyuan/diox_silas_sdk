@@ -9,13 +9,13 @@
 using npm
 
 ```bash
-npm install @dioxide-js/silas
+$ npm install @dioxide-js/silas
 ```
 
 using yarn
 
 ```bash
-yarn add @dioxide-js/silas
+$ yarn add @dioxide-js/silas
 ```
 
 Using pnpm:
@@ -25,8 +25,6 @@ $ pnpm add @dioxide-js/silas
 ```
 
 ## Getting Started
-
-All the [Type Declaration](./silas/src/api/type.ts).
 
 ### Initialize
 
@@ -95,7 +93,7 @@ const registed = await web3.account.getRegState({
 const registed = await web3.account.register({id: user0.id})
 ```
 
-## Overview
+### Overview
 
 ##### chainStatus(): Promise\<DIOX.ChainStatus>
 
@@ -231,3 +229,7 @@ const data = aawait web3.txn.send({
 
 console.log(data) // output:  "5akjfknj9phq93r56kqygjcv3r1tpwm2gt82xex1z3nkrk4r509g"
 ```
+
+### Type Declaration
+
+see `silas/src/api/type.ts`

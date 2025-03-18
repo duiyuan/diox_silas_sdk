@@ -26,7 +26,7 @@ class Proof {
   async newProof(privatekey: string | Uint8Array, params: NewProofParams) {
     const { sender, ttl, key, content } = params
     if (!privatekey || !sender) {
-      throw `privatekey and sender is required`
+      throw `both privatekey and sender are required`
     }
     return this.tx.send(
       {
@@ -46,7 +46,7 @@ class Proof {
   async newProofByProofKey(privatekey: string | Uint8Array, params: NewProofByProofHashParams) {
     const { sender, ttl, proof_key, content } = params
     if (!privatekey || !sender) {
-      throw `privatekey and sender is required`
+      throw `both privatekey and sender are required`
     }
     return this.tx.send(
       {
