@@ -1,8 +1,10 @@
 # @dioxide-js/silas
 
-@dioxide-js/silas is a Nodejs SDK implementation of the [Silas RPC API](#)
+@dioxide-js/silas is a Nodejs/javasript SDK which designed to interact with [Dioxide JSON RPC API](#)。
 
 ## Installation
+
+### For use in Node.js or a web application
 
 using npm
 
@@ -14,6 +16,12 @@ using yarn
 
 ```bash
 yarn add @dioxide-js/silas
+```
+
+Using pnpm:
+
+```bash
+$ pnpm add @dioxide-js/silas
 ```
 
 ## Getting Started
@@ -70,7 +78,7 @@ const proofs = await web3.proof.checkProof("ctz5ftg90cxm65j3ns5g4f99zezen9a73dkw
 
 ```
 const result = await web3.account.generate('sm2')
-console.log(result.pk, result.sk, result.address)
+console.log(result.publickey, result.privatekey, result.address)
 ```
 
 ##### getRegState(p: RegsiterOption): Promise\<boolean>
@@ -211,7 +219,7 @@ console.log(data)
 Send a transaction. The transaction will be constructed and signed locally using the private key, and the signed result will be broadcast to the blockchain. The private key will not be transmitted over the network.
 
 ```
-const data = aawait web3.txn.sign({
+const data = aawait web3.txn.send({
   args: {
     Amount: '200000000',
     To: user1.address
