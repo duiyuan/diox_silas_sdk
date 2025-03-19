@@ -44,7 +44,7 @@ export class DIOAddress {
         this.instance = new ECDSA({ privateKey: privateKey })
         break
       default:
-        throw 'DIOAddress ERROR: unsupported alg:' + this.alg
+        throw 'Unsupported alg:' + this.alg
     }
   }
 
