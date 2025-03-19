@@ -1,5 +1,7 @@
 import { dataview } from '@dioxide-js/misc'
 import isBase64 from 'is-base64'
+import { sha256, Message } from 'js-sha256'
+import encode from 'base32-encode'
 
 export function concat(...args: ArrayBuffer[]) {
   let length = 0
@@ -50,6 +52,7 @@ export function toUint8Array(s: string | Uint8Array) {
   }
 
   if (s.startsWith('0x')) {
+    ;``
     s = s.replace(/^0x/, '')
     return dataview.hexToU8(s)
   }
@@ -59,4 +62,10 @@ export function toUint8Array(s: string | Uint8Array) {
   }
 
   throw `illegal input, expect base64-string, base16-string or Uint8Array`
+}
+
+export function toProofKeyHash(message: Message): string {
+  const hex = sha256(message)
+  const msg = dataview.hexToU8(hex)
+  return encode(msg, 'Crockford')
 }
