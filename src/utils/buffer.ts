@@ -52,7 +52,6 @@ export function toUint8Array(s: string | Uint8Array) {
   }
 
   if (s.startsWith('0x')) {
-    ;``
     s = s.replace(/^0x/, '')
     return dataview.hexToU8(s)
   }
