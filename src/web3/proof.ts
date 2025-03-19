@@ -13,7 +13,7 @@ export interface NewProofByProofHashParams {
   sender: string
   ttl?: number
   proof_key: string
-  content: string
+  content?: string
 }
 
 class Proof {
@@ -44,7 +44,7 @@ class Proof {
   }
 
   async newProofByProofKey(privatekey: string | Uint8Array, params: NewProofByProofHashParams) {
-    const { sender, ttl, proof_key, content } = params
+    const { sender, ttl, proof_key, content = '' } = params
     if (!privatekey || !sender) {
       throw `both privatekey and sender are required`
     }
