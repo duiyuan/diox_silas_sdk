@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.33](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.32...v0.1.33) (2025-03-19)
+
+
+### Features
+
+* newProofByProofkey ([ecd75b6](https://github.com/duiyuan/diox_silas_sdk/commit/ecd75b6c77a3c2835f6100ec75cad212104c12a2))
+
 ### [0.1.32](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.31...v0.1.32) (2025-03-18)
 
 ### [0.1.31](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.30...v0.1.31) (2025-03-18)
