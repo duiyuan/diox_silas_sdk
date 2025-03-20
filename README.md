@@ -136,7 +136,7 @@ const list = await web3.overview.getTxHistory()
 console.log(list)
 ```
 
-## Address
+### Address
 
 ##### getISN(address: string): Promise\<number>
 
@@ -171,7 +171,7 @@ const profile = await web3.address.getAddressInfo({
 console.log(profile)
 ```
 
-## Block
+### Block
 
 ##### getExcutedTx(params: { height: number; limit?: number; pos?: number }): Promise\<DIOX.ExcutedTx | undefined>
 
@@ -187,7 +187,7 @@ const detail = await web3.block.detail()
 console.log(detail)
 ```
 
-## Transaction
+### Transaction
 
 ##### getTx(hash: string): Promise\<DIOX.TxDetail>
 
