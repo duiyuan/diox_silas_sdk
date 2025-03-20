@@ -4,7 +4,9 @@ const { Web3, DIOAddress } = require('../lib/commonjs/index.js')
 const { fromByteArray, toByteArray } = require('base64-js')
 const { dataview } = require('@dioxide-js/misc')
 
-const web3 = new Web3('http://localhost:7600')
+const web3 = new Web3('http://localhost:7600', {
+  showTxFlow: true,
+})
 
 const user_0 = {
   sk: 'NkX61/SdEIajg+lAcHNEgiFiMsjIkf4wQ+CswpkFODQ=',

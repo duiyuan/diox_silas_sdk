@@ -6,6 +6,12 @@ import provider from '../api/provider'
 import Blocks from '../api/block'
 import Overview from '../api/overview'
 import Proof from './proof'
+import { Alg } from '../utils'
+
+interface Options {
+  alg?: Alg
+  showDuration?: boolean
+}
 
 class Web3 {
   private net: Provider
@@ -17,14 +23,20 @@ class Web3 {
   proof: Proof
   account: Account
 
-  constructor(net: Provider) {
+  constructor(net: Provider, opts: Options = {}) {
     this.net = net || NET.TEST
     provider.set(this.net)
+
+    const options = {
+      alg: 'sm2',
+      showTxFlow: false,
+      ...opts,
+    }
 
     this.address = new Address()
     this.blocks = new Blocks()
     this.overview = new Overview()
-    this.txn = new Transaction()
+    this.txn = new Transaction(options.alg as Alg, options.showTxFlow)
     this.proof = new Proof()
     this.account = new Account()
 
