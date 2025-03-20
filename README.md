@@ -226,4 +226,4 @@ console.log(data) // output:  "5akjfknj9phq93r56kqygjcv3r1tpwm2gt82xex1z3nkrk4r5
 
 ### Type Declaration
 
-see `src/api/type.ts`
+see `src/api/type.ts` [link](https://www.npmjs.com/package/@dioxide-js/silas?activeTab=code)
