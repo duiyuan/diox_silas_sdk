@@ -47,12 +47,14 @@ class Transaction {
   }
 
   async sign(originalTxn: OriginalTxn, secretKey: Uint8Array | string, option?: AlgOption) {
+    // const t0 = Date.now()
     if (typeof secretKey === 'string') {
       secretKey = toUint8Array(secretKey)
     }
     const dioAddress = new DIOAddress(this.alg, secretKey)
     const txdata = await this.compose(originalTxn)
-
+    // console.log('compose tx data =>', Date.now() - t0)
+    // const t1 = Date.now()
     let pk: Uint8Array | null = null
     let longPK: Uint8Array | null = null
 
@@ -70,9 +72,13 @@ class Transaction {
     ])
     const raw = encode(dataWithPK)
     const signedInfo = await dioAddress.sign(dataWithPK, secretKey, option)
+    // console.log('sign tx =>', Date.now() - t1)
     const signature = dataview.u8ToHex(signedInfo)
 
+    // const t2 = Date.now()
     const isValid = await dioAddress.verifySignature(dataWithPK, signature, longPK!, option)
+    // console.log('verify signature=>', Date.now() - t2)
+    // const t3 = Date.now()
     if (!isValid) {
       throw new Error('sign error')
     }
@@ -83,6 +89,8 @@ class Transaction {
     })
     const finalInfowithNonce = powDiff.getHashMixinNonnce()
     const hash = base32Encode(sha256.arrayBuffer(finalInfowithNonce), 'Crockford')
+    // console.log('computed nonce =>', Date.now() - t3)
+    // console.log('all =>', Date.now() - t0)
     return {
       composedTxDataWithPK: raw,
       signature: encode(signedInfo),

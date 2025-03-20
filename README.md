@@ -206,30 +206,6 @@ cosnole.log(detail)
 
 ```
 
-##### sign(originalTxn: OriginalTxn, secretKey: Uint8Array | string, option?: AlgOption): Promise\<SignedData>
-
-Construct and sign the transaction locally using the private key. Return the signed result. The private key will not be transmitted over the network.
-
-```
-const data = await web3.txn.sign({
-  args: {
-    Amount: '200000000',
-    To: user1.address
-  },
-  function: 'core.coin.transfer',
-  gasprice: '100',
-  sender: user0.address,
-}, user0.privatekey)
-
-console.log(data)
-// output:
-{
-  signature: "FrPY1vIDx1CrpSiNbko3CPL...",
-  rawTxData: "QAD066yhlQEHA...",
-  hash: "5akjfknj9phq93r56kqygjcv3r1tpwm2gt82xex1z3nkrk4r509g",
-}
-```
-
 ##### send(originTxn: OriginalTxn, secretKey: Uint8Array | string): Promise\<string>
 
 Send a transaction. The transaction will be constructed and signed locally using the private key, and the signed result will be broadcast to the blockchain. The private key will not be transmitted over the network.
