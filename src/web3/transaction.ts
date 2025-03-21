@@ -40,7 +40,7 @@ class Transaction {
     all: 0,
   }
 
-  constructor(alg: Alg = 'sm2', showTxFlow: boolean) {
+  constructor(alg: Alg = 'sm2', showTxFlow: boolean = false) {
     this.txnServices = new TransactionService()
     this.overViewServices = new OverviewService()
 
