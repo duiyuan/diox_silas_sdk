@@ -120,13 +120,6 @@ const status = await web3.overview.chainStatus()
 console.log(status.Throughput) // output: 100.03
 ```
 
-##### getGasPrice(): Promise\<number>
-
-```
-const price = await web3.overview.getGasPrice()
-console.log(price) // output: 30000
-```
-
 ##### getTxHistory(params?: DIOXScanReq.History): Promise\<TxSumList>
 
 Get recently transactions on blockchain.
