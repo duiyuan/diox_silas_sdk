@@ -173,7 +173,14 @@ console.log(profile)
 
 ### Block
 
-##### getExcutedTx(params: { height: number; limit?: number; pos?: number }): Promise\<DIOX.ExcutedTx | undefined>
+##### getHistory(params: { height: number; limit?: number, pos?: number; shardindex?: number}): Promise<DIOX.Block[] | undefined
+
+```
+const blockList = await web3.block.getHistory()
+console.log(blockList)
+```
+
+##### getExcutedTx(params: { height: number; limit?: number; pos?: number; shardindex?: number }): Promise\<DIOX.ExcutedTx | undefined>
 
 ```
 const tx = await web3.block.getExcutedTx()

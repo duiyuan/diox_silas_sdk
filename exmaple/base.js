@@ -11,6 +11,9 @@ async function Start() {
   const isn = await web3.address.getISN(user1)
   console.log(`isn =>`, isn)
 
+  const blockList = await web3.blocks.getHistory({ shardindex: 1 })
+  console.log(`blockList =>`, blockList)
+
   // Get tranasctions by user address
   const txnList = await web3.address.getTxnListByAddress({ address: user1 })
   console.log(`txnList =>`, txnList)
