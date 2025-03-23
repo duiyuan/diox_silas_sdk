@@ -1,8 +1,8 @@
 // https://const.net.cn/tool/sm2/genkey/
 
 const { Web3, DIOAddress } = require('../lib/commonjs/index.js')
-const { fromByteArray, toByteArray } = require('base64-js')
 const { dataview } = require('@dioxide-js/misc')
+const smcrypto = require('sm-crypto')
 
 const web3 = new Web3('http://localhost:7600', {
   showTxFlow: true,
@@ -11,7 +11,9 @@ const web3 = new Web3('http://localhost:7600', {
 const user_0 = {
   sk: 'NkX61/SdEIajg+lAcHNEgiFiMsjIkf4wQ+CswpkFODQ=',
   address: '2hh0gc3src6payx9z6wvgkcek0tef9qc8k7j8f312qszyeyp64mn8y9sxr:sm2',
-  sk_b64: 'g+N6oQMedYju5L7K8KJpQpjpWExDiM0bpBgbFoXHbUm47jJeTVxs9PIrPmU/ZTI1UeRvvtJlktfhvVzT3S52zQ==',
+  pk_b64: 'g+N6oQMedYju5L7K8KJpQpjpWExDiM0bpBgbFoXHbUm47jJeTVxs9PIrPmU/ZTI1UeRvvtJlktfhvVzT3S52zQ==',
+  pk_b16:
+    '83e37aa1031e7588eee4becaf0a2694298e9584c4388cd1ba4181b1685c76d49b8ee325e4d5c6cf4f22b3e653f65323551e46fbed26592d7e1bd5cd3dd2e76cd',
 }
 
 const user_1 = {
@@ -20,11 +22,20 @@ const user_1 = {
   sk_b64: '9JV6rrhtNuWl70lCREk7TmVOwhAMZTPzfJLbXtx0niA=',
 }
 
-signTxn()
-  .then((rsp) => {
-    console.log(rsp)
+async function verifyGivenSignature() {
+  const signature =
+    'fe63c42468e983d27e8ee3841a2c1cfeec916250949ec8fca2ceb59ab759f1514c9caa27e4893c3a91b9cfe0d61cc66a71aa6310d56f37b9e18057bf9c25c33a'
+  const message = 'hahahaa12323'
+  const msg = dataview.stringToU8(message)
+
+  const publicKey = dataview.concat(new Uint8Array([0x4]), dataview.hexToU8(user_0.pk_b16))
+  const dioAddress = new DIOAddress('sm2', dataview.base64ToU8(user_0.sk))
+  const result = await dioAddress.verifySignature(msg, signature, publicKey, {
+    der: false,
+    hash: false,
   })
-  .catch(console.error)
+  return result
+}
 
 async function generateAddress(alg, privatekey) {
   const { privatekey: sk, publickey: pk, address, sku8, pku8, lpku8 } = await new DIOAddress(alg, privatekey).generate()
@@ -37,10 +48,19 @@ async function generateAddress(alg, privatekey) {
 
 async function signTxn() {
   const result = await generateAddress('sm2', user_0.sk)
-
   return web3.txn.transfer({
     to: user_1.address,
-    amount: '300000000',
+    amount: '30000',
     secretKey: result.sk_u8,
   })
 }
+
+async function start() {
+  const result = await verifyGivenSignature()
+  console.log('verfiy =>', result)
+
+  const signed = await signTxn()
+  console.log('signed result =>', signed)
+}
+
+start().catch(console.error)
