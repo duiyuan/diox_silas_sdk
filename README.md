@@ -1,6 +1,6 @@
 # @dioxide-js/silas
 
-@dioxide-js/silas is a Nodejs/javasript SDK which designed to interact with [Dioxide JSON RPC API](#)。
+@dioxide-js/silas is a Nodejs/javascript SDK which designed to interact with [Dioxide JSON RPC API](#)。
 
 ## Installation
 
