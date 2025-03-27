@@ -18,7 +18,7 @@ class Web3 {
 
   address: Address
   txn: Transaction
-  blocks: Blocks
+  block: Blocks
   overview: Overview
   proof: Proof
   account: Account
@@ -34,7 +34,7 @@ class Web3 {
     }
 
     this.address = new Address()
-    this.blocks = new Blocks()
+    this.block = new Blocks()
     this.overview = new Overview()
     this.txn = new Transaction(options.alg as Alg, options.showTxFlow)
     this.proof = new Proof()
