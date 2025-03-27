@@ -27,6 +27,9 @@ export function validCRC(publicKey: Uint8Array, alg: string) {
 export function isValidAddress(addr: string): boolean /* | undefined */ {
   try {
     const [addressStr, alg] = addr.split(':')
+    if (!addressStr || !alg) {
+      return false
+    }
     const address = new Uint8Array(base32Decode(addressStr, 'Crockford'))
 
     const publicKey = address.slice(0, 32)

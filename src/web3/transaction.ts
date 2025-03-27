@@ -5,7 +5,7 @@ import base32Encode from 'base32-encode'
 import { dataview } from '@dioxide-js/misc'
 
 import TransactionService from '../api/transactions'
-import { DIOAddress, Alg, toUint8Array } from '../utils'
+import { DIOAddress, Alg, toUint8Array, isValidAddress } from '../utils'
 import PowDifficulty from '../utils/powDifficulty'
 import OverviewService from '../api/overview'
 import { OriginalTxn } from '../api/type'
@@ -15,6 +15,7 @@ export interface TransferDIOParams {
   amount: string
   secretKey: Uint8Array | string
   ttl?: number
+  sender: string
 }
 
 export interface TransferFCAParams {
@@ -168,8 +169,15 @@ class Transaction {
   }
 
   async transfer(params: TransferDIOParams) {
-    const { to, amount, secretKey, ttl } = params
-    const sender = await this.sk2base32Address(secretKey, this.alg)
+    const { to, amount, secretKey, ttl, sender } = params
+    if (!sender) {
+      throw 'sender unfilled'
+    }
+
+    if (!isValidAddress(sender)) {
+      throw 'invalid sender'
+    }
+    // const sender = await this.sk2base32Address(secretKey, this.alg)
     return this.send(
       {
         sender,
@@ -185,7 +193,7 @@ class Transaction {
     )
   }
 
-  private async sk2base32Address(sk: Uint8Array | string, alg: Alg) {
+  async sk2base32Address(sk: Uint8Array | string, alg: Alg) {
     if (typeof sk === 'string') {
       sk = toUint8Array(sk)
     }
