@@ -41,9 +41,9 @@ async function generateAddress(alg, privatekey) {
   const { privatekey: sk, publickey: pk, address, sku8, pku8, lpku8 } = await new DIOAddress(alg, privatekey).generate()
   const p = dataview.u8ToBase64(pku8)
   const lpk = dataview.u8ToBase64(lpku8)
-  console.log('64b =>', p)
-  console.log('65b =>', lpk)
-  return { sk, pk, address, sk_u8: sku8 }
+  const ret = { sk, pk, address, sk_u8: sku8 }
+  console.log(ret)
+  return ret
 }
 
 async function signTxn() {
@@ -63,4 +63,5 @@ async function start() {
   console.log('signed result =>', signed)
 }
 
-start().catch(console.error)
+// start().catch(console.error)
+generateAddress('sm2', '0heUr38QG+xZria1wOZxZ8tyzYDyjFWXBp2gI+EnupE=').catch(console.error)
