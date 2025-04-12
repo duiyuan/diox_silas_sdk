@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import typescript from '@rollup/plugin-typescript'
 import { terser } from 'rollup-plugin-terser'
+import nodePolyfills from 'rollup-plugin-polyfill-node'
 
 const require = createRequire(import.meta.url)
 const pkg = require('./package.json')
@@ -76,26 +77,33 @@ export default [
     ],
     external,
   },
-  // {
-  //   input: 'src/index.ts',
-  //   output: {
-  //     file: pkg.browser,
-  //     format: 'umd',
-  //     name: 'DSSWeb3',
-  //     sourcemap: true,
-  //   },
-  //   plugins: [
-  //     resolve({
-  //       preferBuiltins: false,
-  //       browser: true,
-  //     }),
-  //     commonjs(),
-  //     typescript({
-  //       tsconfig: './tsconfig.json',
-  //       declaration: false,
-  //       outDir: 'dist/umd',
-  //     }),
-  //     terser(),
-  //   ],
-  // },
+  {
+    input: 'src/index.ts',
+    output: {
+      file: pkg.browser,
+      format: 'umd',
+      name: 'DSSWeb3',
+      sourcemap: true,
+      globals: {
+        crypto: 'crypto',
+      },
+    },
+    plugins: [
+      nodePolyfills({
+        include: ['crypto'],
+      }),
+      resolve({
+        preferBuiltins: false,
+        browser: true,
+      }),
+      commonjs(),
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: false,
+        outDir: 'dist/umd',
+      }),
+      terser(),
+    ],
+    external: [...external.filter((m) => m !== 'crypto')],
+  },
 ]
