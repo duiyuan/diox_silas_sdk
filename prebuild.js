@@ -1,5 +1,0 @@
-const fs = require('fs')
-const path = require('path')
-const { version } = require('./package.json')
-const constantFile = path.resolve('src', 'constants', 'version.ts')
-fs.writeFileSync(constantFile, `export const LIB_VERSION = '${version}'\n`)
