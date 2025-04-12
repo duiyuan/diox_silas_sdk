@@ -23,9 +23,11 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      file: pkg.module,
+      dir: 'dist/esm',
       format: 'esm',
       sourcemap: true,
+      preserveModules: true,
+      preserveModulesRoot: 'src',
     },
     plugins: [
       ...plugs,
