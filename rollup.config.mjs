@@ -15,6 +15,22 @@ const plugs = [
   commonjs(),
 ]
 
+const external = [
+  'crypto',
+  'util',
+  'zlib',
+  'http',
+  'https',
+  'events',
+  'stream',
+  'url',
+  'path',
+  'fs',
+  'assert',
+  'tty',
+  'os',
+]
+
 /**
  * @type {import('rollup').RollupOptions}
  */
@@ -38,26 +54,28 @@ export default [
         outDir: 'dist/esm',
       }),
     ],
+    external,
   },
 
   // CommonJS
-  // {
-  //   input: 'src/index.ts',
-  //   output: {
-  //     file: pkg.main,
-  //     format: 'cjs',
-  //     sourcemap: true,
-  //     exports: 'auto',
-  //   },
-  //   plugins: [
-  //     ...plugs,
-  //     typescript({
-  //       tsconfig: './tsconfig.json',
-  //       declaration: false,
-  //       outDir: 'dist/cjs',
-  //     }),
-  //   ],
-  // },
+  {
+    input: 'src/index.ts',
+    output: {
+      file: pkg.main,
+      format: 'cjs',
+      sourcemap: true,
+      exports: 'auto',
+    },
+    plugins: [
+      ...plugs,
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: false,
+        outDir: 'dist/cjs',
+      }),
+    ],
+    external,
+  },
   // {
   //   input: 'src/index.ts',
   //   output: {
@@ -67,7 +85,10 @@ export default [
   //     sourcemap: true,
   //   },
   //   plugins: [
-  //     resolve(),
+  //     resolve({
+  //       preferBuiltins: false,
+  //       browser: true,
+  //     }),
   //     commonjs(),
   //     typescript({
   //       tsconfig: './tsconfig.json',

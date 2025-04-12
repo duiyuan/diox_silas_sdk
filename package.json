@@ -28,16 +28,17 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
+    "postbuild": "rimraf dist/**/_virtual",
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "lint": "eslint --cache --cache-strategy content --ext .ts .",
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "test": "jest --clearCache && jest --config ./test/unit/jest.config.js",
-    "ex:base": "node exmaple/base.js",
-    "ex:tx": "node exmaple/tx.js",
-    "ex:proof": "node exmaple/proof.js"
+    "ex:base": "node example/base.js",
+    "ex:tx": "node example/tx.js",
+    "ex:proof": "node example/proof.js"
   },
-  "author": "dioxide",
+  "author": "shangwenwang20@gmail.com",
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.3",
