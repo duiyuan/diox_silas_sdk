@@ -109,7 +109,7 @@ export default [
         declaration: false,
         outDir: 'dist/umd',
       }),
-      // terser(),
+      terser(),
     ],
     external: [...external.filter((m) => m !== 'crypto')],
   },
