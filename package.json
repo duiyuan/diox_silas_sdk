@@ -18,11 +18,6 @@
     "silas",
     "@dixodejs/silas"
   ],
-  "exports": {
-    "types": "./dist/esm/types/index.d.ts",
-    "import": "./dist/esm/index.js",
-    "require": "./dist/commonjs/index.js"
-  },
   "engines": {
     "node": ">=18.16.0"
   },
