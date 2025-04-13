@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- Replace url for umd assets  -->
+  <script src="http://127.0.0.1:9002/umd/index.js"></script>
+  <script>
+    const { Web3, NET } = DSSWeb3;
+    const web3 = new Web3(NET.TEST);
+    web3.overview.chainStatus().then(console.log)
+  </script>
+</body>
+
+</html>
