@@ -45,6 +45,7 @@ export default [
       sourcemap: true,
       preserveModules: true,
       preserveModulesRoot: 'src',
+      entryFileNames: '[name].mjs',
     },
     plugins: [
       ...plugs,

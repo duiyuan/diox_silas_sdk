@@ -3,7 +3,7 @@
   "version": "0.1.49",
   "description": "RPC utility for Silas",
   "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "module": "dist/esm/index.mjs",
   "browser": "dist/umd/index.js",
   "types": "dist/esm/types/index.d.ts",
   "files": [
@@ -18,12 +18,19 @@
     "silas",
     "@dixodejs/silas"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/esm/types/index.d.ts",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.js",
+      "browser": "./dist/umd/index.js"
+    }
+  },
   "engines": {
     "node": ">=18.16.0"
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "postbuild": "rimraf dist/**/_virtual",
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "lint": "eslint --cache --cache-strategy content --ext .ts .",
