@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.49...v0.2.1) (2025-04-13)
+
+
+### Bug Fixes
+
+* esmodule ([9e7e52f](https://github.com/duiyuan/diox_silas_sdk/commit/9e7e52f284e5515386e56d714f52c9f5acc85ffc))
+
 ### [0.1.49](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.48...v0.1.49) (2025-03-28)
 
 ### [0.1.48](https://github.com/duiyuan/diox_silas_sdk/compare/v0.1.47...v0.1.48) (2025-03-27)
