@@ -5,6 +5,7 @@ import json from '@rollup/plugin-json'
 import typescript from '@rollup/plugin-typescript'
 import { terser } from 'rollup-plugin-terser'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
+import replace from '@rollup/plugin-replace'
 
 const require = createRequire(import.meta.url)
 const pkg = require('./package.json')
@@ -87,11 +88,16 @@ export default [
       sourcemap: true,
       globals: {
         crypto: 'crypto',
+        global: 'window',
       },
     },
     plugins: [
       nodePolyfills({
         include: ['crypto'],
+      }),
+      replace({
+        global: 'window',
+        preventAssignment: true,
       }),
       resolve({
         preferBuiltins: false,
@@ -103,7 +109,7 @@ export default [
         declaration: false,
         outDir: 'dist/umd',
       }),
-      terser(),
+      // terser(),
     ],
     external: [...external.filter((m) => m !== 'crypto')],
   },
