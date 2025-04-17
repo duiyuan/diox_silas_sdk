@@ -10,9 +10,12 @@
 <body>
   <!-- Replace url for umd assets  -->
   <script src="http://127.0.0.1:9002/umd/index.js"></script>
+  <!-- <script src="https://unpkg.com/@dioxide-js/silas@0.2.1/dist/umd/index.min.js"></script> -->
   <script>
     const { Web3, NET } = DSSWeb3;
-    const web3 = new Web3(NET.TEST);
+    const web3 = new Web3(NET.TEST, {
+      apiKey: "your_api_key"
+    });
     web3.overview.chainStatus().then(console.log)
   </script>
 </body>

@@ -1,6 +1,8 @@
 const { Web3, NET } = require('../dist/cjs/index.js')
 
-const web3 = new Web3(NET.Test)
+const web3 = new Web3(NET.Test, {
+  apiKey: 'abcdefg',
+})
 const user1 = 'dwm1ycvfsa6d3vsrzne5nqyw420qtp8krxvbmddck8tyqqzvtamp9p8y54:sm2'
 
 async function Start() {

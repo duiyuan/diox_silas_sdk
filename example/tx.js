@@ -3,8 +3,10 @@
 const { Web3, DIOAddress, NET } = require('../dist/cjs/index.js')
 const { dataview } = require('@dioxide-js/misc')
 
-const web3 = new Web3(NET.TEST, {
+const web3 = new Web3(NET.LOCAL, {
   showTxFlow: true,
+  apiKey: 'abcdef',
+  n: 0,
 })
 
 const user_0 = {
@@ -48,6 +50,7 @@ async function generateAddress(alg, privatekey) {
 async function signTxn() {
   const result = await generateAddress('sm2', user_0.sk)
   return web3.txn.transfer({
+    sender: user_0.address,
     to: user_1.address,
     amount: '30000',
     secretKey: result.sk_u8,
@@ -62,5 +65,5 @@ async function start() {
   console.log('signed result =>', signed)
 }
 
-// start().catch(console.error)
-generateAddress('sm2', '0heUr38QG+xZria1wOZxZ8tyzYDyjFWXBp2gI+EnupE=').catch(console.error)
+start().catch(console.error)
+// generateAddress('sm2', '0heUr38QG+xZria1wOZxZ8tyzYDyjFWXBp2gI+EnupE=').catch(console.error)

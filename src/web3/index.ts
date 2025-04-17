@@ -10,7 +10,9 @@ import { Alg } from '../utils'
 
 interface Options {
   alg?: Alg
+  apiKey: string
   showDuration?: boolean
+  n?: number
 }
 
 class Web3 {
@@ -23,9 +25,12 @@ class Web3 {
   proof: Proof
   account: Account
 
-  constructor(net: Provider, opts: Options = {}) {
+  constructor(net: Provider, opts: Options) {
     this.net = net || NET.TEST
-    provider.set(this.net)
+
+    if (!opts?.apiKey) {
+      throw 'unfilled authorization'
+    }
 
     const options = {
       alg: 'sm2',
@@ -33,12 +38,16 @@ class Web3 {
       ...opts,
     }
 
-    this.address = new Address()
-    this.block = new Blocks()
-    this.overview = new Overview()
-    this.txn = new Transaction(options.alg as Alg, options.showTxFlow)
-    this.proof = new Proof()
-    this.account = new Account()
+    const { apiKey, n } = options
+    provider.set(this.net)
+    provider.setApiKey(options.apiKey)
+
+    this.address = new Address({ apiKey })
+    this.block = new Blocks({ apiKey })
+    this.overview = new Overview({ apiKey })
+    this.txn = new Transaction({ apiKey, n })
+    this.proof = new Proof({ apiKey })
+    this.account = new Account({ apiKey })
 
     // console.log('Dioxide initialized with net: ', this.net)
   }

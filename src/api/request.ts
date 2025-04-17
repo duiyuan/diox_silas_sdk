@@ -5,6 +5,17 @@ import { composeParams } from './rpc'
 const TIMEOUT = 30 * 1000
 
 export default class Fetcher {
+  apiKey = ''
+
+  get autherization() {
+    return 'Bearer ' + this.apiKey
+  }
+
+  constructor(opts: { apiKey: string }) {
+    const { apiKey } = opts
+    this.apiKey = apiKey ?? provider.apiKey
+  }
+
   prune = (url: string) => (url.endsWith('/') ? url.slice(0, -1) : url)
 
   async postToBC<T>(action: string, payload: { [key: string]: any }, opts: AxiosRequestConfig = {}): Promise<T> {
@@ -19,6 +30,7 @@ export default class Fetcher {
     const options: AxiosRequestConfig = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: this.autherization,
       },
       timeout: TIMEOUT,
       ...opts,

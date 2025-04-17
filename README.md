@@ -24,6 +24,19 @@ Using pnpm:
 $ pnpm add @dioxide-js/silas
 ```
 
+Using in browser
+
+```
+<script src="https://unpkg.com/@dioxide-js/silas@latest/dist/umd/index.min.js"></script>
+<script>
+    const { Web3, NET } = DSSWeb3;
+    const web3 = new Web3(NET.TEST, {
+      apiKey: <YOUR_API_KEY>
+    });
+    web3.overview.chainStatus().then(console.log)
+</script>
+```
+
 ## Getting Started
 
 ### Initialize
@@ -32,7 +45,9 @@ $ pnpm add @dioxide-js/silas
 import { Web3, NET } from '@dioxide-js/silas'
 import { dataview } from '@dioxide-js/misc'
 
-const web3 = new Web3(NET.TEST) // const web3 = new Web3(NET.MAIN); // For production
+const web3 = new Web3(NET.TEST, {
+  apiKey: 'YOUR_API_KEY',
+}) // const web3 = new Web3(NET.MAIN); // For production
 const user0 = {
   address: 'jjkw5p9fz7nk0zfy6171ch0dy8bk16mhgpwkdcrc4rpt4sfzpvht9za2qr:sm2',
   privatekey: 'AyyogAYL5nVC5CsrTxdYe9IBXOppNqsGd+hSHn+QT68=',

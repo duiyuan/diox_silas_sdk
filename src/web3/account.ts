@@ -11,10 +11,10 @@ interface RegsiterOption {
 export default class Account extends Request {
   address: Address
 
-  constructor() {
-    super()
+  constructor(opts: { apiKey: string }) {
+    super(opts)
 
-    this.address = new Address()
+    this.address = new Address(opts)
   }
 
   async generate(alg: Alg = 'sm2', privatekey?: Uint8Array | string): Promise<AddressGenerated> {

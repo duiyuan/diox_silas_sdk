@@ -3,7 +3,9 @@
 const { Web3, NET } = require('../dist/cjs/index.js')
 const { toProofKeyHash } = require('../dist/cjs/utils/buffer.js')
 
-const web3 = new Web3(NET.LOCAL)
+const web3 = new Web3(NET.LOCAL, {
+  apiKey: 'abcdefg',
+})
 const proof = web3.proof
 
 const user = {

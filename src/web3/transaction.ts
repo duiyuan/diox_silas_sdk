@@ -32,6 +32,7 @@ class Transaction {
 
   alg: Alg = 'sm2'
   showTxFlow?: boolean
+  n = 3
 
   private duration = {
     compose: 0,
@@ -41,12 +42,18 @@ class Transaction {
     all: 0,
   }
 
-  constructor(alg: Alg = 'sm2', showTxFlow: boolean = false) {
-    this.txnServices = new TransactionService()
-    this.overViewServices = new OverviewService()
+  constructor(opts: { alg?: Alg; showTxFlow?: boolean; apiKey: string; n?: number }) {
+    const { alg = 'sm2', showTxFlow = false, apiKey, n } = opts
+    this.txnServices = new TransactionService({ apiKey })
+    this.overViewServices = new OverviewService({ apiKey })
 
     this.alg = alg
     this.showTxFlow = showTxFlow
+
+    if (typeof n !== 'undefined' && typeof n !== 'number') {
+      throw 'n muse be number'
+    }
+    this.n = n ?? 3
   }
 
   getTx = async (hash: string) => {
@@ -102,6 +109,7 @@ class Transaction {
     const powDiff = new PowDifficulty({
       originTxn: finalInfo.buffer,
       ttl: originalTxn.ttl,
+      n: this.n,
     })
     const finalInfowithNonce = powDiff.getHashMixinNonnce()
     this.duration.computedNonce = Date.now() - t3

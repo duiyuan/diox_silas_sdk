@@ -19,9 +19,10 @@ export interface NewProofByProofHashParams {
 class Proof {
   private tx: Transaction
   private proofSvc: ProofService
-  constructor() {
-    this.tx = new Transaction()
-    this.proofSvc = new ProofService()
+  constructor(opts: { apiKey: string }) {
+    const { apiKey } = opts
+    this.tx = new Transaction({ apiKey })
+    this.proofSvc = new ProofService(opts)
   }
   async newProof(privatekey: string | Uint8Array, params: NewProofParams) {
     const { sender, ttl, key, content } = params

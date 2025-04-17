@@ -1,11 +1,11 @@
 import { sha256 } from 'js-sha256'
 import { sha512 } from 'js-sha512'
-const NONCE_LEN = 12
 
 interface IPowDifficulty {
   originTxn: ArrayBuffer
   hashSize?: number
   ttl?: number
+  n?: number
 }
 class PowDifficulty {
   hashSize: number
@@ -14,14 +14,20 @@ class PowDifficulty {
   originTxn: ArrayBuffer
   powData: ArrayBuffer
   ttl: number
+  n: number
 
-  constructor({ originTxn, hashSize, ttl }: IPowDifficulty) {
+  constructor({ originTxn, hashSize, ttl, n }: IPowDifficulty) {
     this.hashSize = hashSize || 32
     this.targetNum = BigInt(0)
     this.nonZeroBytes = 0
     this.originTxn = originTxn
     this.ttl = ttl || 30
     this.powData = sha512.arrayBuffer(this.originTxn)
+    this.n = n ?? 3
+  }
+
+  get nonceLen() {
+    return 4 * this.n
   }
 
   public LeadingZeroBits(x: bigint) {
@@ -75,11 +81,11 @@ class PowDifficulty {
   getNonce() {
     // set diffculty
     // this.Set((1000 + (this.originTxn.byteLength + NONCE_LEN) * (this.ttl * 10 + 100)) / 3)
-    this.Set((1 + (this.originTxn.byteLength + NONCE_LEN) * (this.ttl * 10 + 100)) / 3)
+    this.Set((1 + (this.originTxn.byteLength + this.nonceLen) * (this.ttl * 10 + 100)) / this.n)
     // loop nonce
     const nonces: number[] = []
     let nonce = 0
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < this.n; i++) {
       while (true) {
         const cloneData = new DataView(this.powData)
         // 64[origin] - 4[nonce]
@@ -97,13 +103,15 @@ class PowDifficulty {
   }
 
   getHashMixinNonnce() {
-    const nonces = this.getNonce()
-    const finalBytes = new Uint8Array(this.originTxn.byteLength + NONCE_LEN)
+    const finalBytes = new Uint8Array(this.originTxn.byteLength + this.nonceLen)
     finalBytes.set(new Uint8Array(this.originTxn), 0)
     // add nonce to last
-    nonces.forEach((nonce, i) => {
-      finalBytes.set(new Uint8Array(new Uint32Array([nonce]).buffer), this.originTxn.byteLength + i * 4)
-    })
+    if (this.n > 0) {
+      const nonces = this.getNonce()
+      nonces.forEach((nonce, i) => {
+        finalBytes.set(new Uint8Array(new Uint32Array([nonce]).buffer), this.originTxn.byteLength + i * 4)
+      })
+    }
     return finalBytes.buffer
   }
 }
