@@ -68,7 +68,7 @@ export class DIOAddress {
     const [splitAddr] = address.split(':')
     const addressUintArr = new Uint8Array(base32Decode(splitAddr, 'Crockford'))
     const publicKey = addressUintArr.slice(0, 32)
-    const checkAddrUintArr = this.PK2Addr(publicKey)
+    const checkAddrUintArr = this.instance!.pkToAddrU8(publicKey)
     if (areUint8ArraysEqual(addressUintArr, checkAddrUintArr)) {
       return publicKey
     }
@@ -89,15 +89,7 @@ export class DIOAddress {
     return result
   }
 
-  PK2Addr(publicKey: Uint8Array) {
-    const rollingCRC = this.methodNum
-    const encryptMethod = this.methodNum
-    let errorCorrectingCode = crc32c.buf(publicKey, rollingCRC)
-    errorCorrectingCode = (errorCorrectingCode & 0xfffffff0) | encryptMethod
-    errorCorrectingCode = errorCorrectingCode >>> 0
-    const buffer = new Int32Array([errorCorrectingCode]).buffer
-    const errorCorrectingCodeBuffer = new Uint8Array(buffer)
-    const mergedBuffer = concat(publicKey, errorCorrectingCodeBuffer)
-    return mergedBuffer
+  publicKeyToAddress(publicKey: Uint8Array, postfix = true) {
+    return this.instance!.pkToAddress(publicKey, postfix)
   }
 }

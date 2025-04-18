@@ -14,6 +14,8 @@ export default abstract class GenericAddress {
   abstract encryptOrderNum: number
   abstract getPubicKeyFromPrivateKey(privateKeyHex: string | Uint8Array): Promise<Uint8Array>
   abstract generate(): Promise<AddressGenerated>
+  abstract pkToAddress(publickey: Uint8Array, withPosfix: boolean): string
+  abstract pkToAddrU8(publickey: Uint8Array): Uint8Array
   abstract sign(
     content: string | number[] | Uint8Array,
     privateKey: Uint8Array,

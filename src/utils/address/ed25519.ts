@@ -64,10 +64,10 @@ export default class DIOEd25519 implements GenericAddress {
   async generate() {
     const [pku8, sku8] = await this.keyPaires()
 
-    const o = this.pkToDIOStruct(pku8)
+    const addr = this.pkToAddress(pku8, true)
     const sk = dataview.u8ToHex(sku8)
     const pk = dataview.u8ToHex(pku8)
-    const address = base32Encode(o.address, 'Crockford').toLowerCase() + ':' + this.encryptMethod
+    const address = addr.toLowerCase()
     return { publickey: pk, privatekey: sk, pku8, sku8, address }
   }
 
@@ -114,6 +114,20 @@ export default class DIOEd25519 implements GenericAddress {
     }
 
     return [publicKey, privateKey]
+  }
+
+  pkToAddrU8(publickey: Uint8Array): Uint8Array {
+    if (publickey.length !== 32) {
+      throw 'expect 32 bytes publick key'
+    }
+    const o = this.pkToDIOStruct(publickey)
+    return o.address
+  }
+
+  pkToAddress(publickey: Uint8Array, postfix = true): string {
+    const u8 = this.pkToAddrU8(publickey)
+    const address = base32Encode(u8, 'Crockford').toLowerCase()
+    return postfix ? address + ':' + this.encryptMethod : address
   }
 
   async sign(content: string | Uint8Array | number[], privateKey: Uint8Array) {

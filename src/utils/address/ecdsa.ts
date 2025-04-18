@@ -65,11 +65,24 @@ export default class ECDSA implements GenericAddress {
   async generate() {
     const [pku8, sku8] = await this.keyPaires()
 
-    const o = this.pkToDIOStruct(pku8, this.encryptOrderNum, this.encryptMethod)
+    const address = this.pkToAddress(pku8, true)
     const sk = dataview.u8ToHex(sku8)
     const pk = dataview.u8ToHex(pku8)
-    const address = base32Encode(o.address, 'Crockford').toLowerCase() + ':' + this.encryptMethod
     return { publickey: pk, privatekey: sk, pku8, sku8, address }
+  }
+
+  pkToAddrU8(publickey: Uint8Array): Uint8Array {
+    if (publickey.length !== 32) {
+      throw 'expect 32 bytes publick key'
+    }
+    const o = this.pkToDIOStruct(publickey)
+    return o.address
+  }
+
+  pkToAddress(publickey: Uint8Array, postfix = true): string {
+    const u8 = this.pkToAddrU8(publickey)
+    const address = base32Encode(u8, 'Crockford').toLowerCase()
+    return postfix ? address + ':' + this.encryptMethod : address
   }
 
   getPubicKeyFromPrivateKey(privateKey: string | Uint8Array): Promise<Uint8Array> {

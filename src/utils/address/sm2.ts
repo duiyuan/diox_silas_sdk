@@ -2,7 +2,6 @@ import * as smcrypto from 'sm-crypto'
 import { dataview } from '@dioxide-js/misc'
 import crc32c from 'crc-32/crc32c.js'
 import base32Encode from 'base32-encode'
-import sha256 from 'sha256'
 
 import GenericAddress, { EncryptMethod, AlgOption } from './base'
 import { toUint8Array } from '../buffer'
@@ -28,32 +27,21 @@ export default class DIOSM2 implements GenericAddress {
     }
   }
 
-  async generate(algHash: 'sm3' | 'sha256' = 'sm3') {
+  async generate() {
     const [pk, sk] = await this.keyPaires()
     const publickKeyU8 = dataview.hexToU8(pk!)
     const sku8 = dataview.hexToU8(sk!)
 
     const pku8 = publickKeyU8.length === 65 ? publickKeyU8.slice(1) : publickKeyU8
     const lpk8 = publickKeyU8.length === 65 ? publickKeyU8 : dataview.concat(new Uint8Array([4]), publickKeyU8)
-    const u8 = this.hash(pku8, algHash)
-
-    const o = this.pkToDIOStruct(u8)
-    const address = base32Encode(o.address, 'Crockford').toLowerCase() + ':sm2'
+    const address = this.pkToAddress(pku8, true)
     const ret = { publickey: pk, privatekey: sk, pku8, sku8, address, lpku8: lpk8 }
     return Promise.resolve(ret)
   }
 
-  hash(publicKey: Uint8Array, algHash: 'sm3' | 'sha256' = 'sha256') {
-    if (algHash === 'sha256') {
-      const u = sha256(publicKey as any, { asBytes: true })
-      return new Uint8Array(u)
-    }
-
-    if (algHash === 'sm3') {
-      const pkHash = sm3(publicKey)
-      return dataview.hexToU8(pkHash)
-    }
-    throw 'unknown hash alg:' + algHash
+  hash(publicKey: Uint8Array): Uint8Array {
+    const pkHash = sm3(publicKey)
+    return dataview.hexToU8(pkHash)
   }
 
   getPubicKeyFromPrivateKey(privateKeyHex: string | Uint8Array) {
@@ -66,7 +54,22 @@ export default class DIOSM2 implements GenericAddress {
     return Promise.resolve(pku8)
   }
 
-  pkToDIOStruct(publicKey: Uint8Array, salt = 1, alias?: string) {
+  pkToAddress(publickey: Uint8Array, withPosfix = true) {
+    const u8 = this.pkToAddrU8(publickey)
+    const address = base32Encode(u8, 'Crockford') + (withPosfix ? ':sm2' : '')
+    return address.toLowerCase()
+  }
+
+  pkToAddrU8(publickey: Uint8Array) {
+    if (publickey.length !== 64) {
+      throw 'expect 64 bytes public key'
+    }
+    const pk32b = this.hash(publickey)
+    const o = this.pkToDIOStruct(pk32b)
+    return o.address
+  }
+
+  private pkToDIOStruct(publicKey: Uint8Array, salt = 1, alias?: string) {
     const order = this.encryptOrderNum
     const method = this.encryptMethod
     let errorCorrectingCode = crc32c.buf(publicKey, order)
