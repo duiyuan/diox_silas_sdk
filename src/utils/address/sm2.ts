@@ -66,7 +66,7 @@ export default class DIOSM2 implements GenericAddress {
     return Promise.resolve(pku8)
   }
 
-  private pkToDIOStruct(publicKey: Uint8Array, salt = 1, alias?: string) {
+  pkToDIOStruct(publicKey: Uint8Array, salt = 1, alias?: string) {
     const order = this.encryptOrderNum
     const method = this.encryptMethod
     let errorCorrectingCode = crc32c.buf(publicKey, order)

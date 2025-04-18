@@ -89,7 +89,7 @@ export class DIOAddress {
     return result
   }
 
-  private PK2Addr(publicKey: Uint8Array) {
+  PK2Addr(publicKey: Uint8Array) {
     const rollingCRC = this.methodNum
     const encryptMethod = this.methodNum
     let errorCorrectingCode = crc32c.buf(publicKey, rollingCRC)
