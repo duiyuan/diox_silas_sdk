@@ -8,7 +8,7 @@ class BlockSvc extends Request {
     pos?: number
     shardindex?: number
   }): Promise<DIOX.ExcutedTx | undefined> {
-    const { limit = 500, pos = 0, height, shardindex } = params
+    const { limit = 200, pos = 0, height, shardindex } = params
     const data = {
       limit,
       pos,
@@ -25,7 +25,7 @@ class BlockSvc extends Request {
     pos?: number
     shardindex?: number
   }): Promise<DIOX.Block[] | undefined> {
-    const { limit = 500, pos = 0, height, shardindex } = params
+    const { limit = 200, pos = 0, height, shardindex } = params
     const data = {
       limit,
       pos,
