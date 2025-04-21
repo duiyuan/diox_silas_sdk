@@ -93,6 +93,7 @@ class PowDifficulty {
         const powDataWithNonce = sha256.arrayBuffer(cloneData.buffer)
         if (this.IsFulfilled(powDataWithNonce)) {
           nonces[i] = nonce
+          console.log('computed nonce =>', nonce)
           break
         }
         nonce++

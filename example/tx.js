@@ -5,8 +5,8 @@ const { dataview } = require('@dioxide-js/misc')
 
 const web3 = new Web3(NET.LOCAL, {
   showTxFlow: true,
-  apiKey: 'abcdef',
-  n: 3,
+  apiKey: 'sk_CDdiLOUG31vArLW35incaSkclHVBiB7yNQQ3YbNJh1M',
+  n: 2,
 })
 
 const user_0 = {

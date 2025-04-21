@@ -1,6 +1,5 @@
 import { decode } from 'base64-arraybuffer'
 import base32Decode from 'base32-decode'
-import crc32c from 'crc-32/crc32c'
 
 import DIOSM2 from './sm2'
 import DIOEd25519 from './ed25519'
