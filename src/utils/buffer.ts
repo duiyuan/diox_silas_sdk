@@ -46,12 +46,17 @@ export function areUint8ArraysEqual(arr1: Uint8Array, arr2: Uint8Array) {
   return true
 }
 
+export function isHex(hex: string) {
+  hex = hex.replace(/^0x/, '')
+  return /^[0-9a-fA-F]+$/.test(hex)
+}
+
 export function toUint8Array(s: string | Uint8Array) {
   if (s instanceof Uint8Array) {
     return s
   }
 
-  if (s.startsWith('0x')) {
+  if (s.startsWith('0x') && isHex(s)) {
     s = s.replace(/^0x/, '')
     return dataview.hexToU8(s)
   }
