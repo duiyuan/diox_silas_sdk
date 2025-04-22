@@ -25,11 +25,8 @@ export default class Account extends Request {
     return this.post<Credential>('user.register', options)
   }
 
-  async getRegState(options: RegsiterOption) {
+  async getState(options: RegsiterOption) {
     const { id, address } = options
-    return this.post<boolean>('user.reg_state', {
-      id,
-      address,
-    })
+    return this.post<boolean>('user.state', { id, address })
   }
 }

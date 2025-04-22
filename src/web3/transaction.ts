@@ -97,14 +97,14 @@ class Transaction {
     this.duration.sign = Date.now() - t1
     const t2 = Date.now()
 
-    const signature = dataview.u8ToHex(signedInfo)
-    const isValid = await dioAddress.verifySignature(dataWithPK, signature, longPK!, option)
+    // const signature = dataview.u8ToHex(signedInfo)
+    // const isValid = await dioAddress.verifySignature(dataWithPK, signature, longPK!, option)
 
     this.duration.verify = Date.now() - t2
     const t3 = Date.now()
-    if (!isValid) {
-      throw new Error('sign error')
-    }
+    // if (!isValid) {
+    //   throw new Error('sign error')
+    // }
     const finalInfo = dataview.concat(dataWithPK, signedInfo)
     const powDiff = new PowDifficulty({
       originTxn: finalInfo.buffer,

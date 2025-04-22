@@ -112,10 +112,10 @@ const result = await web3.account.generate('sm2')
 console.log(result.publickey, result.privatekey, result.address)
 ```
 
-##### getRegState(p: RegsiterOption): Promise\<boolean>
+##### getState(p: RegsiterOption): Promise\<boolean>
 
 ```
-const registed = await web3.account.getRegState({
+const registed = await web3.account.getState({
   address: user0.address
 })
 ```
