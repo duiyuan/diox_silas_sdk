@@ -1,10 +1,11 @@
 // https://const.net.cn/tool/sm2/genkey/
 
-const { Web3, NET } = require('../dist/cjs/index.js')
-const { toProofKeyHash } = require('../dist/cjs/utils/buffer.js')
+const { Web3, NET, utils } = require('../dist/cjs/index.js')
+const toProofKeyHash = utils.toProofKeyHash
 
 const web3 = new Web3(NET.LOCAL, {
-  apiKey: 'abcdefg',
+  apiKey: 'sk_CDdiLOUG31vArLW35incaSkclHVBiB7yNQQ3YbNJh1M',
+  n: 1,
 })
 const proof = web3.proof
 
