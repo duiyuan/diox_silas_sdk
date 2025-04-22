@@ -85,6 +85,7 @@ class PowDifficulty {
     // loop nonce
     const nonces: number[] = []
     let nonce = 0
+    let start = Date.now()
     for (let i = 0; i < this.n; i++) {
       while (true) {
         const cloneData = new DataView(this.powData)
@@ -93,7 +94,9 @@ class PowDifficulty {
         const powDataWithNonce = sha256.arrayBuffer(cloneData.buffer)
         if (this.IsFulfilled(powDataWithNonce)) {
           nonces[i] = nonce
-          console.log('computed nonce =>', nonce)
+          const end = Date.now()
+          console.log(`computed nonce(${i}) =>`, nonce, end - start + 'ms')
+          start = Date.now()
           break
         }
         nonce++
