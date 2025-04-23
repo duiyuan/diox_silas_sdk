@@ -21,7 +21,7 @@ class PowDifficulty {
     this.targetNum = BigInt(0)
     this.nonZeroBytes = 0
     this.originTxn = originTxn
-    this.ttl = ttl || 120
+    this.ttl = ttl || 30
     this.powData = sha512.arrayBuffer(this.originTxn)
     this.n = n ?? 3
   }
