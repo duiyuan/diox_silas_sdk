@@ -128,6 +128,7 @@ class Transaction {
       hash: hash.toLowerCase(),
       pk: encode(pk),
       txFlow: this.duration,
+      nonceTime: powDiff.t,
     }
   }
 

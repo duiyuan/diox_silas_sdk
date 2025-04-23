@@ -15,6 +15,7 @@ class PowDifficulty {
   powData: ArrayBuffer
   ttl: number
   n: number
+  t: number[] = []
 
   constructor({ originTxn, hashSize, ttl, n }: IPowDifficulty) {
     this.hashSize = hashSize || 32
@@ -97,7 +98,9 @@ class PowDifficulty {
         if (this.IsFulfilled(powDataWithNonce)) {
           nonces[i] = nonce
           const end = Date.now()
-          console.log(`computed nonce(${i}) =>`, nonce, end - start + 'ms')
+          const time = end - start
+          this.t.push(time)
+          console.log(`computed nonce(${i}) =>`, nonce, time + 'ms')
           start = Date.now()
           break
         }
