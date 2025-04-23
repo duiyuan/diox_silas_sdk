@@ -127,6 +127,7 @@ class Transaction {
       rawTxData: encode(finalInfowithNonce),
       hash: hash.toLowerCase(),
       pk: encode(pk),
+      txFlow: this.duration,
     }
   }
 
