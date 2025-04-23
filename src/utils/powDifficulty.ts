@@ -21,7 +21,7 @@ class PowDifficulty {
     this.targetNum = BigInt(0)
     this.nonZeroBytes = 0
     this.originTxn = originTxn
-    this.ttl = ttl || 30
+    this.ttl = ttl || 120
     this.powData = sha512.arrayBuffer(this.originTxn)
     this.n = n ?? 3
   }
@@ -57,6 +57,7 @@ class PowDifficulty {
     }
     this.targetNum = num >> BigInt(32)
     this.nonZeroBytes += 8
+    console.log({ denominator, targetNum: this.targetNum, nonZeroBytes: this.nonZeroBytes })
   }
 
   IsFulfilled(sha256Buffer: ArrayBuffer) {
