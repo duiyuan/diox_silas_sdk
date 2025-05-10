@@ -32,7 +32,7 @@ class Transaction {
 
   alg: Alg = 'sm2'
   showTxFlow?: boolean
-  n = 3
+  n = 1
 
   private duration = {
     compose: 0,
