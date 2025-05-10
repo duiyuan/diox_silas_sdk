@@ -110,6 +110,7 @@ class Transaction {
       originTxn: finalInfo.buffer,
       ttl: originalTxn.ttl,
       n: this.n,
+      debug: this.showTxFlow,
     })
     const finalInfowithNonce = powDiff.getHashMixinNonnce()
     this.duration.computedNonce = Date.now() - t3

@@ -6,6 +6,7 @@ interface IPowDifficulty {
   hashSize?: number
   ttl?: number
   n?: number
+  debug?: boolean
 }
 class PowDifficulty {
   hashSize: number
@@ -16,8 +17,9 @@ class PowDifficulty {
   ttl: number
   n: number
   t: number[] = []
+  debug?: boolean = false
 
-  constructor({ originTxn, hashSize, ttl, n }: IPowDifficulty) {
+  constructor({ originTxn, hashSize, ttl, n, debug }: IPowDifficulty) {
     this.hashSize = hashSize || 32
     this.targetNum = BigInt(0)
     this.nonZeroBytes = 0
@@ -25,6 +27,7 @@ class PowDifficulty {
     this.ttl = ttl || 30
     this.powData = sha512.arrayBuffer(this.originTxn)
     this.n = n ?? 3
+    this.debug = debug
   }
 
   get nonceLen() {
@@ -58,7 +61,9 @@ class PowDifficulty {
     }
     this.targetNum = num >> BigInt(32)
     this.nonZeroBytes += 8
-    console.log({ denominator, targetNum: this.targetNum, nonZeroBytes: this.nonZeroBytes })
+    if (this.debug) {
+      console.log({ denominator, targetNum: this.targetNum, nonZeroBytes: this.nonZeroBytes })
+    }
   }
 
   IsFulfilled(sha256Buffer: ArrayBuffer) {
@@ -102,7 +107,9 @@ class PowDifficulty {
           const end = Date.now()
           const time = end - start
           this.t.push(time)
-          console.log(`computed nonce(${i}) =>`, nonce, time + 'ms')
+          if (this.debug) {
+            console.log(`computed nonce(${i}) =>`, nonce, time + 'ms')
+          }
           start = Date.now()
           break
         }
