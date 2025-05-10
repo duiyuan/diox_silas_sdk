@@ -112,12 +112,20 @@ const result = await web3.account.generate('sm2')
 console.log(result.publickey, result.privatekey, result.address)
 ```
 
-##### getState(p: RegsiterOption): Promise\<boolean>
+##### getState(p: RegsiterOption): Promise\<{address: string; publickey: string; status: number; userid: string}>
 
-```
-const registed = await web3.account.getState({
-  address: user0.address
+```javascript
+const userState = await web3.account.getState({
+  address: user0.address,
 })
+console.log(userState)
+
+/* output: {
+        "address": "a0r0ywzbgntvppvbqwrc6fgfz54f5zq1fme9579bd69j64gvk7f78nmwjm:sm2",
+        "publickey": "S7dFGoY5TMydWP1+VuSG5+IpmVMv1jbbqwpBJDxIILtUlntfmrONqfPYZ+0GSbHZ4QlSQaUTcqKrPHWV2nqZTQ==",
+        "status": "0",
+        "userid": "new_test"
+} */
 ```
 
 ##### register(p: RegsiterOption): Promise\<boolean>
