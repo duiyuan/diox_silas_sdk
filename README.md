@@ -29,8 +29,8 @@ Using in browser
 ```
 <script src="https://unpkg.com/@dioxide-js/silas@latest/dist/umd/index.min.js"></script>
 <script>
-    const { Web3, NET } = DSSWeb3;
-    const web3 = new Web3(NET.TEST, {
+    const { Web3 } = DSSWeb3;
+    const web3 = new Web3(<DIOSERVICE_ENDPOINT>, {
       apiKey: <YOUR_API_KEY>
     });
     web3.overview.chainStatus().then(console.log)
@@ -45,7 +45,7 @@ Using in browser
 import { Web3, NET } from '@dioxide-js/silas'
 import { dataview } from '@dioxide-js/misc'
 
-const web3 = new Web3(NET.TEST, {
+const web3 = new Web3(<DIOSERVICE_ENDPOINT>, {
   apiKey: 'YOUR_API_KEY',
 }) // const web3 = new Web3(NET.MAIN); // For production
 const user0 = {
