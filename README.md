@@ -71,24 +71,6 @@ const txnHash = await web3.proof.newProof(user0.privatekey, {
 })
 ```
 
-##### newProofByProofKey(privatekey: string | Unit8Array, p: NewProofByProofHashParams): Promise\<string\>
-
-To set a proof and retrieve tx hash as result.
-
-```
-import { utils } from "@dioxide-js/silas"
-
-const fileBuffer = new Uint8Array([0x1, 0x2, 0x3, 0x4])
-const proofKey = utils.toProofKeyHash(fileBuffer)
-
-const txnHash = await web3.proof.newProofByProofKey(user0.privatekey, {
-  sender: user_0.address,
-  proof_key: proofKey,
-  content: 'ff' // optional
-})
-console.log(txnHash)
-```
-
 ##### getProofs(p: GetProofsParams): Promise\<Proof\>
 
 ```
