@@ -1,5 +1,6 @@
 import { sha256 } from 'js-sha256'
 import { sha512 } from 'js-sha512'
+import { concat } from './buffer'
 
 interface IPowDifficulty {
   originTxn: ArrayBuffer
@@ -121,7 +122,7 @@ class PowDifficulty {
   }
 
   getHashMixinNonnce() {
-    const finalBytes = new Uint8Array(this.originTxn.byteLength + this.nonceLen)
+    let finalBytes = new Uint8Array(this.originTxn.byteLength + this.nonceLen)
     finalBytes.set(new Uint8Array(this.originTxn), 0)
     // add nonce to last
     if (this.n > 0) {
@@ -130,7 +131,10 @@ class PowDifficulty {
         finalBytes.set(new Uint8Array(new Uint32Array([nonce]).buffer), this.originTxn.byteLength + i * 4)
       })
     } else {
-      finalBytes.set(new Uint8Array(new Uint32Array([0]).buffer), this.originTxn.byteLength + 4)
+      // must specify 4 bytes number as nonce if nonce is needless
+      const nonceU8 = new Uint8Array([1, 1, 1, 1])
+      // finalBytes.set(nonceU8, this.originTxn.byteLength + 1)
+      finalBytes = concat(finalBytes, nonceU8)
     }
     return finalBytes.buffer
   }
