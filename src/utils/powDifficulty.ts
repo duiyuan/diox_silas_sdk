@@ -129,6 +129,8 @@ class PowDifficulty {
       nonces.forEach((nonce, i) => {
         finalBytes.set(new Uint8Array(new Uint32Array([nonce]).buffer), this.originTxn.byteLength + i * 4)
       })
+    } else {
+      finalBytes.set(new Uint8Array(new Uint32Array([0]).buffer), this.originTxn.byteLength + 4)
     }
     return finalBytes.buffer
   }
