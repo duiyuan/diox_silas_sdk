@@ -1,12 +1,11 @@
 import { NET } from '../constants'
 import Address from '../api/address'
-import { Transaction, TxOption } from './transaction'
+import { Transaction, TxOption, SignMethod } from './transaction'
 import Account from './account'
 import provider from '../api/provider'
 import Blocks from '../api/block'
 import Overview from '../api/overview'
 import Proof from './proof'
-import { Alg } from '../utils'
 
 class Web3 {
   private net: Provider
@@ -51,4 +50,4 @@ class Web3 {
   }
 }
 
-export { Web3 }
+export { Web3, type SignMethod }
