@@ -1,19 +1,12 @@
 import { NET } from '../constants'
 import Address from '../api/address'
-import { Transaction } from './transaction'
+import { Transaction, TxOption } from './transaction'
 import Account from './account'
 import provider from '../api/provider'
 import Blocks from '../api/block'
 import Overview from '../api/overview'
 import Proof from './proof'
 import { Alg } from '../utils'
-
-interface Options {
-  alg?: Alg
-  apiKey: string
-  showDuration?: boolean
-  n?: number
-}
 
 class Web3 {
   private net: Provider
@@ -25,14 +18,14 @@ class Web3 {
   proof: Proof
   account: Account
 
-  constructor(net: Provider, opts: Options) {
+  constructor(net: Provider, opts: TxOption) {
     this.net = net || NET.TEST
 
     if (!opts?.apiKey) {
       throw 'unfilled authorization'
     }
 
-    const options = {
+    const options: TxOption = {
       alg: 'sm2',
       showTxFlow: false,
       ...opts,
@@ -45,7 +38,7 @@ class Web3 {
     this.address = new Address({ apiKey })
     this.block = new Blocks({ apiKey })
     this.overview = new Overview({ apiKey })
-    this.txn = new Transaction({ apiKey, n })
+    this.txn = new Transaction(options)
     this.proof = new Proof({ apiKey, n })
     this.account = new Account({ apiKey })
 

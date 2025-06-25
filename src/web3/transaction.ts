@@ -10,6 +10,8 @@ import PowDifficulty from '../utils/powDifficulty'
 import OverviewService from '../api/overview'
 import { OriginalTxn } from '../api/type'
 
+export type SignMethod = (txdata: Uint8Array, privatekey: Uint8Array) => Promise<Uint8Array>
+
 export interface TransferDIOParams {
   to: string
   amount: string
@@ -26,13 +28,23 @@ export interface TransferFCAParams {
   ttl?: number
 }
 
+export interface TxOption {
+  alg?: Alg
+  apiKey: string
+  showDuration?: boolean
+  n?: number
+  customSign?: SignMethod
+  showTxFlow?: boolean
+}
+
 class Transaction {
   private txnServices: TransactionService
   private overViewServices: OverviewService
 
+  customSign?: SignMethod
   alg: Alg = 'sm2'
   showTxFlow?: boolean
-  n = 1
+  n = 0
 
   private duration = {
     compose: 0,
@@ -42,12 +54,13 @@ class Transaction {
     all: 0,
   }
 
-  constructor(opts: { alg?: Alg; showTxFlow?: boolean; apiKey: string; n?: number }) {
-    const { alg = 'sm2', showTxFlow = false, apiKey, n } = opts
+  constructor(opts: TxOption) {
+    const { alg = 'sm2', showTxFlow = false, apiKey, n, customSign } = opts
     this.txnServices = new TransactionService({ apiKey })
     this.overViewServices = new OverviewService({ apiKey })
 
     this.alg = alg
+    this.customSign = customSign
     this.showTxFlow = showTxFlow
 
     if (typeof n !== 'undefined' && typeof n !== 'number') {
@@ -92,7 +105,9 @@ class Transaction {
       { encryptedMethodOrderNumber: dioAddress.methodNum, publicKey: pk },
     ])
     const raw = encode(dataWithPK)
-    const signedInfo = await dioAddress.sign(dataWithPK, secretKey, option)
+    const signedInfo = this.customSign
+      ? await this.customSign(dataWithPK, secretKey)
+      : await dioAddress.sign(dataWithPK, secretKey, option)
 
     this.duration.sign = Date.now() - t1
     const t2 = Date.now()
