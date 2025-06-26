@@ -38,7 +38,7 @@ class Web3 {
     this.block = new Blocks({ apiKey })
     this.overview = new Overview({ apiKey })
     this.txn = new Transaction(options)
-    this.proof = new Proof({ apiKey, n })
+    this.proof = new Proof(options)
     this.account = new Account({ apiKey })
 
     // console.log('Dioxide initialized with net: ', this.net)

@@ -1,4 +1,4 @@
-import { Transaction } from './transaction'
+import { Transaction, TxOption } from './transaction'
 import { GetProofsParams } from '../api/type'
 import ProofService from '../api/proof'
 
@@ -19,9 +19,8 @@ export interface NewProofByProofHashParams {
 class Proof {
   private tx: Transaction
   private proofSvc: ProofService
-  constructor(opts: { apiKey: string; n?: number }) {
-    const { apiKey, n } = opts
-    this.tx = new Transaction({ apiKey, n })
+  constructor(opts: TxOption) {
+    this.tx = new Transaction(opts)
     this.proofSvc = new ProofService(opts)
   }
   async newProof(privatekey: string | Uint8Array, params: NewProofParams) {
