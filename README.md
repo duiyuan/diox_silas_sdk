@@ -216,7 +216,7 @@ cosnole.log(detail)
 Send a transaction. The transaction will be constructed and signed locally using the private key, and the signed result will be broadcast to the blockchain. The private key will not be transmitted over the network.
 
 ```
-const data = aawait web3.txn.send({
+const data = aawait web3.txn.send(user0.privatekey, {
   args: {
     Amount: '200000000',
     To: user1.address
@@ -224,7 +224,7 @@ const data = aawait web3.txn.send({
   function: 'core.coin.transfer',
   gasprice: '100',
   sender: user0.address,
-}, user0.privatekey)
+})
 
 console.log(data) // output:  "5akjfknj9phq93r56kqygjcv3r1tpwm2gt82xex1z3nkrk4r509g"
 ```

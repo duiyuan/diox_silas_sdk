@@ -3,7 +3,7 @@ import isBase64 from 'is-base64'
 import { sha256, Message } from 'js-sha256'
 import encode from 'base32-encode'
 
-export function concat(...args: ArrayBuffer[]) {
+export function concat(...args: (ArrayBuffer | Uint8Array)[]) {
   let length = 0
   const units = args.map((arg) => {
     return new Uint8Array(arg)

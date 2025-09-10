@@ -37,6 +37,7 @@
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "test": "jest --clearCache && jest --config ./test/unit/jest.config.js",
     "ex:base": "node example/base.js",
+    "ex:contract": "node example/contract.js",
     "ex:tx": "node example/tx.js",
     "ex:proof": "node example/proof.js"
   },

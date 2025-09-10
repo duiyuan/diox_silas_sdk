@@ -229,7 +229,7 @@ export declare namespace DIOX {
 
 export interface OriginalTxn {
   gasprice?: string | number
-  sender: string
+  sender?: string
   function: string
   args: KeyValue
   delegatee?: string | number
