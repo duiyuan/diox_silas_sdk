@@ -30,7 +30,7 @@ class Web3 {
       ...opts,
     }
 
-    const { apiKey, n } = options
+    const { apiKey } = options
     provider.set(this.net)
     provider.setApiKey(options.apiKey)
 
