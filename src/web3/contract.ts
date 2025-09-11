@@ -16,6 +16,10 @@ interface ExecContractParams {
   sender: string
 }
 
+interface ABISubItem {
+  [key: string]: string
+}
+
 export default class Contract extends Request {
   contractSvc: ContractService
   private tx: Transaction
@@ -30,8 +34,23 @@ export default class Contract extends Request {
     return this.contractSvc.info(name)
   }
 
-  abi(name: string) {
-    return this.contractSvc.abi(name)
+  async abi(name: string) {
+    const items = await this.contractSvc.abi(name)
+    const composed = items.map((item) => {
+      const { signature } = item
+      if (signature) {
+        const chunks = signature.split(' ')
+        const results: ABISubItem[] = []
+        for (let i = 0; i < chunks.length; i += 2) {
+          const sub: ABISubItem = {}
+          sub[chunks[i + 1]] = chunks[i]
+          results.push(sub)
+        }
+        item.args = results
+        return item
+      }
+    })
+    return composed
   }
 
   async mint(privatekey: string | Uint8Array, sender: string, amount = '1000000000000000000') {

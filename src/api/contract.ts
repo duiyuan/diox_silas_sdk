@@ -6,6 +6,7 @@ export interface ContractFunction {
   scope: string
   opcode: number
   signature: string
+  args?: { [key: string]: any }[]
 }
 
 export interface ContractInterfaces {

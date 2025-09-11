@@ -3,7 +3,6 @@ const { user } = require('./conf')
 
 const web3 = new Web3(NET.LOCAL, {
   apiKey: 'sk_CDdiLOUG31vArLW35incaSkclHVBiB7yNQQ3YbNJh1M',
-  n: 0,
 })
 const dapp = 'trump01'
 const name = 'ProofMe'
