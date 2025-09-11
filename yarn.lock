@@ -292,10 +292,10 @@
   resolved "https://registry.npmmirror.com/@blakeembrey/template/-/template-1.2.0.tgz#acd948eb29334e882019e8876b42ff6da1dcf528"
   integrity sha512-w/63nURdkRPpg3AXbNr7lPv6HgOuVDyefTumiXsbXxtIwcuk5EXayWR5OpSwDjsQPgaYsfUSedMduaNOjAYY8A==
 
-"@dioxide-js/misc@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@dioxide-js/misc/-/misc-0.3.2.tgz#7803948cf32238aefc73074aae5caba813dbcd46"
-  integrity sha512-YzS0AydpS+hUMxoO6yIR7Y+6d/Yv2TyBhUP8MYhZlHszgQo4hwEf14hZ2CVpZxWHzi+SWf2FWzMWQkcSYxWHRg==
+"@dioxide-js/misc@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.npmmirror.com/@dioxide-js/misc/-/misc-0.3.3.tgz#4af78e2c0cad9a0fc902687a8224db6a66d16b90"
+  integrity sha512-WmVAaRTtTIM1YJWR4llYguXaJU8QGFHAHBU2Se8jKeAlAOLhVV+b6PmAyNzXk2cf3kj100d1VlGdpp21IvjOLA==
   dependencies:
     base32-decode "^1.0.0"
     base32-encode "^2.0.0"

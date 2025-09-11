@@ -34,9 +34,9 @@ class ContractService extends Request {
     return this.postToBC<ContractData>('dx.contract_info', { contract: contractName })
   }
 
-  async abi(contractName: string) {
-    const { Functions } = await this.info(contractName)
-    return Functions
+  async abi(contractName: string): Promise<ContractFunction[]> {
+    const info = await this.info(contractName)
+    return info.Functions
   }
 }
 

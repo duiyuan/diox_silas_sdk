@@ -10,6 +10,12 @@ interface DeployContractParams extends OriginalTxn {
   delegatee: string
 }
 
+interface ExecContractParams {
+  func: string
+  args: any
+  sender: string
+}
+
 export default class Contract extends Request {
   contractSvc: ContractService
   private tx: Transaction
@@ -56,5 +62,19 @@ export default class Contract extends Request {
       args: { code, cargs, time },
       ttl,
     })
+  }
+
+  async run(privatekey: string | Uint8Array, params: ExecContractParams) {
+    const { args, func, sender } = params
+    if (!privatekey && !sender) {
+      throw `both privatekey and sender are required`
+    }
+
+    const isFunc = typeof func === 'string' && func.split('.').length === 3
+    if (!isFunc) {
+      throw `bad func for exexcution, the format must be: <dapp>.<contract>.<function>`
+    }
+
+    return this.tx.send(privatekey, { gasprice: 100, function: func, args, sender })
   }
 }

@@ -216,6 +216,18 @@ cosnole.log(detail)
 Send a transaction. The transaction will be constructed and signed locally using the private key, and the signed result will be broadcast to the blockchain. The private key will not be transmitted over the network.
 
 ```
+export interface OriginalTxn {
+  gasprice?: string | number
+  sender?: string
+  function: string
+  args: KeyValue
+  delegatee?: string | number
+  gaslimit?: string | number
+  tokens?: { [key: string]: string }[]
+  ttl?: number
+  scale?: number
+}
+
 const data = aawait web3.txn.send(user0.privatekey, {
   args: {
     Amount: '200000000',
@@ -227,6 +239,61 @@ const data = aawait web3.txn.send(user0.privatekey, {
 })
 
 console.log(data) // output:  "5akjfknj9phq93r56kqygjcv3r1tpwm2gt82xex1z3nkrk4r509g"
+```
+
+### Contract
+
+##### deploy(privatekey: string | Uint8Array, params: DeployContractParams) : Promise\<string>
+
+```
+interface DeployContractParams extends OriginalTxn {
+  code: string[]
+  cargs: string[]
+  time?: number
+  delegatee: string
+}
+
+const deployHash = await web3.contract.deploy(user.privatekey, {
+  delegatee: dapp + ':dapp',
+  code: [contract1],
+  cargs: [''],
+})
+console.log('deploy =>', deployHash)
+```
+
+##### run(privatekey: string | Uint8Array, params: ExecContractParams) : Promise\<string>
+
+```
+interface ExecContractParams {
+  func: string
+  args: any
+  sender: string
+}
+
+const invokeHash = await web3.contract.run(user.privatekey, {
+  sender: user.address,
+  func: `${dapp}.ProofMe.new`,
+  args: { key: 'a', content: 'b' },
+})
+console.log('run contract function =>', invokeHash)
+```
+
+##### abi(contractName: string): Promise\<ContractFunction[]>
+
+Retrive ABI for a contract.
+
+```
+export interface ContractFunction {
+  name: string
+  flag: string
+  scope: string
+  opcode: number
+  signature: string
+}
+
+
+const abi = await web3.contract.abi(name)
+console.log('abi =>', abi)
 ```
 
 ### Type Declaration

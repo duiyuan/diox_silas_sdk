@@ -5,8 +5,10 @@ const web3 = new Web3(NET.LOCAL, {
   apiKey: 'sk_CDdiLOUG31vArLW35incaSkclHVBiB7yNQQ3YbNJh1M',
   n: 0,
 })
+const dapp = 'trump01'
+const name = 'ProofMe'
 const contract1 = `
-contract ProofMe{
+contract ${name} {
     @shard scattered_map<hash, string> proofs;
 
     @address function new(string key, string content) public export const {
@@ -38,27 +40,33 @@ contract ProofMe{
 }`
 
 async function start() {
-  // retrive constract abi
-  // const info = await web3.contract.abi(name)
-  // console.log('info =>', info)
-  //
   // mint
   // const mint = await web3.contract.mint(user.privatekey, user.address)
   // console.log('mint =>', mint)
   //
 
-  const dapp = 'trump01'
   // bid dapp
   // const bidHash = await web3.contract.createDApp(user.privatekey, user.address, dapp)
   // console.log('new dapp =>', bidHash)
 
-  // deploy
-  const deployHash = await web3.contract.deploy(user.privatekey, {
-    delegatee: dapp + ':dapp',
-    code: [contract1],
-    cargs: [''],
+  // deploy contract
+  // const deployHash = await web3.contract.deploy(user.privatekey, {
+  //   delegatee: dapp + ':dapp',
+  //   code: [contract1],
+  //   cargs: [''],
+  // })
+  // console.log('deploy =>', deployHash)
+
+  // retrive constract abi
+  const abi = await web3.contract.abi(dapp + '.' + name)
+  console.log('abi =>', abi)
+
+  const invokeHash = await web3.contract.run(user.privatekey, {
+    sender: user.address,
+    func: `${dapp}.${name}.new`,
+    args: { key: 'a', content: 'b' },
   })
-  console.log('deploy =>', deployHash)
+  console.log('run contract function =>', invokeHash)
 
   return true
 }
