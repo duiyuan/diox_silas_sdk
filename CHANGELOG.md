@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.30](https://github.com/duiyuan/diox_silas_sdk/compare/v0.2.29...v0.2.30) (2025-09-11)
+
 ### [0.2.29](https://github.com/duiyuan/diox_silas_sdk/compare/v0.2.28...v0.2.29) (2025-06-26)
 
 ### [0.2.28](https://github.com/duiyuan/diox_silas_sdk/compare/v0.2.27...v0.2.28) (2025-06-25)
