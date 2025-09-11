@@ -1,7 +1,7 @@
 const { Web3, NET } = require('../dist/cjs/index.js')
 
 const web3 = new Web3(NET.Test, {
-  apiKey: 'abcdefg',
+  apiKey: 'sk_CDdiLOUG31vArLW35incaSkclHVBiB7yNQQ3YbNJh1M',
 })
 const user1 = 'dwm1ycvfsa6d3vsrzne5nqyw420qtp8krxvbmddck8tyqqzvtamp9p8y54:sm2'
 

@@ -2,6 +2,7 @@ import { NET } from '../constants'
 import Address from '../api/address'
 import { Transaction, TxOption, SignMethod } from './transaction'
 import Account from './account'
+import Contract from './contract'
 import provider from '../api/provider'
 import Blocks from '../api/block'
 import Overview from '../api/overview'
@@ -16,6 +17,7 @@ class Web3 {
   overview: Overview
   proof: Proof
   account: Account
+  contract: Contract
 
   constructor(net: Provider, opts: TxOption) {
     this.net = net || NET.TEST
@@ -40,6 +42,7 @@ class Web3 {
     this.txn = new Transaction(options)
     this.proof = new Proof(options)
     this.account = new Account({ apiKey })
+    this.contract = new Contract({ apiKey })
 
     // console.log('Dioxide initialized with net: ', this.net)
   }

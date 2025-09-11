@@ -23,6 +23,12 @@
       "type": "node-terminal"
     },
     {
+      "command": "npm run ex:contract",
+      "name": "ex:contract",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
       "command": "npm run test",
       "name": "test",
       "request": "launch",

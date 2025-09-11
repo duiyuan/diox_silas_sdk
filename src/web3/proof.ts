@@ -28,19 +28,13 @@ class Proof {
     if (!privatekey || !sender) {
       throw `both privatekey and sender are required`
     }
-    return this.tx.send(
-      {
-        sender,
-        gasprice: 100,
-        function: 'silas.ProofOfExistence.new',
-        args: {
-          key,
-          content,
-        },
-        ttl,
-      },
-      privatekey,
-    )
+    return this.tx.send(privatekey, {
+      sender,
+      gasprice: 100,
+      function: 'silas.ProofOfExistence.new',
+      args: { key, content },
+      ttl,
+    })
   }
 
   async newProofByProofKey(privatekey: string | Uint8Array, params: NewProofByProofHashParams) {
@@ -48,19 +42,16 @@ class Proof {
     if (!privatekey || !sender) {
       throw `both privatekey and sender are required`
     }
-    return this.tx.send(
-      {
-        sender,
-        gasprice: 100,
-        function: 'silas.ProofOfExistence.newByProofKey',
-        args: {
-          proof_key,
-          content,
-        },
-        ttl,
+    return this.tx.send(privatekey, {
+      sender,
+      gasprice: 100,
+      function: 'silas.ProofOfExistence.newByProofKey',
+      args: {
+        proof_key,
+        content,
       },
-      privatekey,
-    )
+      ttl,
+    })
   }
 
   async getProofs(params: GetProofsParams) {

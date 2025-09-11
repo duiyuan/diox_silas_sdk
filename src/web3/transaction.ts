@@ -1,5 +1,5 @@
 import { AlgOption } from './../utils/address/base'
-import { encode } from 'base64-arraybuffer'
+import { encode as en } from 'base64-arraybuffer'
 import { sha256 } from 'js-sha256'
 import base32Encode from 'base32-encode'
 import { dataview } from '@dioxide-js/misc'
@@ -26,6 +26,10 @@ export interface TransferFCAParams {
   amount: string
   secretKey: Uint8Array | string
   ttl?: number
+}
+
+function encode(data: Uint8Array | ArrayBuffer) {
+  return en(data as any)
 }
 
 export interface TxOption {
@@ -55,7 +59,7 @@ class Transaction {
   }
 
   constructor(opts: TxOption) {
-    const { alg = 'sm2', showTxFlow = false, apiKey, n, customSign } = opts
+    const { alg = 'sm2', showTxFlow = false, apiKey, n = 0, customSign } = opts
     this.txnServices = new TransactionService({ apiKey })
     this.overViewServices = new OverviewService({ apiKey })
 
@@ -66,7 +70,7 @@ class Transaction {
     if (typeof n !== 'undefined' && typeof n !== 'number') {
       throw 'n muse be number'
     }
-    this.n = n ?? 3
+    this.n = n
   }
 
   getTx = async (hash: string) => {
@@ -96,7 +100,7 @@ class Transaction {
       pk = await dioAddress.getPubicKeyFromPrivateKey(secretKey)
       longPK = dataview.concat(new Uint8Array([4]), pk)
     } else {
-      longPK = pk = dioAddress.addressToPublicKey(originalTxn.sender)
+      longPK = pk = dioAddress.addressToPublicKey(originalTxn.sender!)
     }
     if (!pk) {
       throw new Error('pk error')
@@ -122,7 +126,7 @@ class Transaction {
     // }
     const finalInfo = dataview.concat(dataWithPK, signedInfo)
     const powDiff = new PowDifficulty({
-      originTxn: finalInfo.buffer,
+      originTxn: finalInfo.buffer as any,
       ttl: originalTxn.ttl,
       n: this.n,
       debug: this.showTxFlow,
@@ -148,7 +152,7 @@ class Transaction {
     }
   }
 
-  async send(originTxn: OriginalTxn, secretKey: Uint8Array | string) {
+  async send(secretKey: Uint8Array | string, originTxn: OriginalTxn) {
     const { rawTxData } = await this.sign(originTxn, secretKey)
     const ret = await this.txnServices.sendTransaction({
       txdata: rawTxData,
@@ -204,19 +208,16 @@ class Transaction {
       throw 'invalid sender'
     }
     // const sender = await this.sk2base32Address(secretKey, this.alg)
-    return this.send(
-      {
-        sender,
-        gasprice: 100,
-        function: 'core.coin.transfer',
-        args: {
-          To: to,
-          Amount: amount,
-        },
-        ttl,
+    return this.send(secretKey, {
+      sender,
+      gasprice: 100,
+      function: 'core.coin.transfer',
+      args: {
+        To: to,
+        Amount: amount,
       },
-      secretKey,
-    )
+      ttl,
+    })
   }
 
   async sk2base32Address(sk: Uint8Array | string, alg: Alg) {
