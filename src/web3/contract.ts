@@ -3,7 +3,7 @@ import ContractService from '../api/contract'
 import { OriginalTxn } from '../api/type'
 import { Transaction } from './transaction'
 
-interface DeployContractParams extends OriginalTxn {
+interface DeployContractParams extends Omit<OriginalTxn, 'function' | 'args'> {
   code: string[]
   cargs: string[]
   time?: number
