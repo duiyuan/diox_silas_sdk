@@ -1,7 +1,7 @@
 const { Web3, NET } = require('../dist/cjs/index.js')
 const { user } = require('./conf')
 
-const web3 = new Web3(NET.LOCAL, {
+const web3 = new Web3(NET.UAT, {
   apiKey: 'sk_CDdiLOUG31vArLW35incaSkclHVBiB7yNQQ3YbNJh1M',
 })
 const dapp = 'trump01'
@@ -40,32 +40,32 @@ contract ${name} {
 
 async function start() {
   // mint
-  // const mint = await web3.contract.mint(user.privatekey, user.address)
-  // console.log('mint =>', mint)
+  const mint = await web3.contract.mint(user.privatekey, user.address)
+  console.log('mint =>', mint)
   //
 
   // bid dapp
-  // const bidHash = await web3.contract.createDApp(user.privatekey, user.address, dapp)
-  // console.log('new dapp =>', bidHash)
+  const bidHash = await web3.contract.createDApp(user.privatekey, user.address, dapp)
+  console.log('new dapp =>', bidHash)
 
   // deploy contract
-  // const deployHash = await web3.contract.deploy(user.privatekey, {
-  //   delegatee: dapp + ':dapp',
-  //   code: [contract1],
-  //   cargs: [''],
-  // })
-  // console.log('deploy =>', deployHash)
+  const deployHash = await web3.contract.deploy(user.privatekey, {
+    delegatee: dapp + ':dapp',
+    code: [contract1],
+    cargs: [''],
+  })
+  console.log('deploy =>', deployHash)
 
   // retrive constract abi
   const abi = await web3.contract.abi(dapp + '.' + name)
   console.log('abi =>', abi)
 
-  const invokeHash = await web3.contract.run(user.privatekey, {
-    sender: user.address,
-    func: `${dapp}.${name}.new`,
-    args: { key: 'a', content: 'b' },
-  })
-  console.log('run contract function =>', invokeHash)
+  // const invokeHash = await web3.contract.run(user.privatekey, {
+  //   sender: user.address,
+  //   func: `${dapp}.${name}.new`,
+  //   args: { key: 'a', content: 'b' },
+  // })
+  // console.log('run contract function =>', invokeHash)
 
   return true
 }

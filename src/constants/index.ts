@@ -47,5 +47,6 @@ export enum NET {
   MAIN = 'https://<the_production_host>',
   TEST = 'http://101.33.210.216:7600',
   LOCAL = 'http://127.0.0.1:7600',
-  TESTP = 'http://10.245.32.4:7600',
+  DEV = 'http://10.245.32.59:7600',
+  UAT = 'http://10.245.32.116:7600',
 }
