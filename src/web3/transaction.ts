@@ -1,14 +1,14 @@
-import { AlgOption } from './../utils/address/base'
 import { encode as en } from 'base64-arraybuffer'
 import { sha256 } from 'js-sha256'
 import base32Encode from 'base32-encode'
 import { dataview } from '@dioxide-js/misc'
 
 import TransactionService from '../api/transactions'
-import { DIOAddress, Alg, toUint8Array, isValidAddress } from '../utils'
+import { AlgOption } from '../utils/address/base'
+import { DIOAddress, Alg, toUint8Array, isValidAddress, sleep } from '../utils'
 import PowDifficulty from '../utils/powDifficulty'
 import OverviewService from '../api/overview'
-import { OriginalTxn } from '../api/type'
+import { DIOX, OriginalTxn } from '../api/type'
 
 export type SignMethod = (txdata: Uint8Array, privatekey: Uint8Array) => Promise<Uint8Array>
 
@@ -227,6 +227,48 @@ class Transaction {
     const dioAddress = new DIOAddress(alg, sk)
     const { address } = await dioAddress.generate()
     return address.toLowerCase()
+  }
+
+  async sureFinalized(
+    hash: string,
+    options?: { max?: number; verbose?: boolean; interval: number },
+  ): Promise<DIOX.TxDetail | false> {
+    const holdOn = ['Not found']
+    const { max = 10, verbose = false, interval = 1 } = options || {}
+    const trace = (message: string) => {
+      const indicator = `[surefinalized] => ${hash} `
+      if (verbose) {
+        console.log(indicator + message)
+      }
+    }
+
+    let loop = 0
+    while (true) {
+      loop++
+      if (loop > max) {
+        trace(`stop because execeed max limit(${loop})`)
+        return false
+      }
+      trace(`continue(${loop})`)
+      await sleep(interval)
+      try {
+        const detail = await this.getTx(hash)
+        if (!detail?.Content) {
+          continue
+        }
+        const { Content } = detail
+        const { Invocation } = Content
+        if (Invocation.Return[0] === 0) {
+          return Content
+        }
+        return false
+      } catch (ex: any) {
+        if (typeof ex === 'string' && holdOn.some((cause) => cause === ex)) {
+          continue
+        }
+        return false
+      }
+    }
   }
 }
 

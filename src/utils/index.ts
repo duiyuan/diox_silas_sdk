@@ -8,3 +8,7 @@ export * from './address'
 export const isUndefined = (input: any) => {
   return typeof input === 'undefined'
 }
+
+export const sleep = (seconds: number) => {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
+}
