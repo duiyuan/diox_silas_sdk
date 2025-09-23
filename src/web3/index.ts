@@ -7,7 +7,6 @@ import provider from '../api/provider'
 import Blocks from '../api/block'
 import Overview from '../api/overview'
 import Proof from './proof'
-import { DIOX } from '../api/type'
 
 class Web3 {
   private net: Provider

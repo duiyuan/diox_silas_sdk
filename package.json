@@ -40,7 +40,8 @@
     "ex:base": "node example/base.js",
     "ex:contract": "node example/contract.js",
     "ex:tx": "node example/tx.js",
-    "ex:proof": "node example/proof.js"
+    "ex:proof": "node example/proof.js",
+    "ex:nft": "node example/nft.js"
   },
   "author": "shangwenwang20@gmail.com",
   "license": "MIT",

@@ -28,6 +28,13 @@
       "request": "launch",
       "type": "node-terminal"
     },
+
+    {
+      "command": "npm run ex:nft",
+      "name": "ex:nft",
+      "request": "launch",
+      "type": "node-terminal"
+    },
     {
       "command": "npm run test",
       "name": "test",
