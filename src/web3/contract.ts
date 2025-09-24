@@ -38,6 +38,7 @@ export default class Contract extends Request {
     const items = await this.contractSvc.abi(name)
     const composed = items.map((item) => {
       const { signature } = item
+      item.args = []
       if (signature) {
         const chunks = signature.split(' ')
         const results: ABISubItem[] = []
@@ -47,8 +48,8 @@ export default class Contract extends Request {
           results.push(sub)
         }
         item.args = results
-        return item
       }
+      return item
     })
     return composed
   }

@@ -11,6 +11,9 @@ const name = 'NonfungiblesToken'
 const contract1 = ``
 
 async function start() {
+  const abi = await web3.contract.abi(dapp + '.' + name)
+  console.log('abi =>', abi)
+
   const invokeHash = await web3.contract.run(user.privatekey, {
     sender: user.address,
     func: `${dapp}.${name}.newCollection`,
