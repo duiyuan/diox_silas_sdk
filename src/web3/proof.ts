@@ -7,6 +7,8 @@ export interface NewProofParams {
   ttl?: number
   key: string
   content: string
+  // gas?: number
+  gasprice?: number
 }
 
 export interface NewProofByProofHashParams {
@@ -14,6 +16,8 @@ export interface NewProofByProofHashParams {
   ttl?: number
   proof_key: string
   content?: string
+  // gas?: number
+  gasprice?: number
 }
 
 class Proof {
@@ -24,13 +28,13 @@ class Proof {
     this.proofSvc = new ProofService(opts)
   }
   async newProof(privatekey: string | Uint8Array, params: NewProofParams) {
-    const { sender, ttl, key, content } = params
+    const { sender, ttl, key, content, gasprice = 10000 } = params
     if (!privatekey || !sender) {
       throw `both privatekey and sender are required`
     }
     return this.tx.send(privatekey, {
       sender,
-      gasprice: 100,
+      gasprice,
       function: 'silas.ProofOfExistence.new',
       args: { key, content },
       ttl,
@@ -38,13 +42,13 @@ class Proof {
   }
 
   async newProofByProofKey(privatekey: string | Uint8Array, params: NewProofByProofHashParams) {
-    const { sender, ttl, proof_key, content = '' } = params
+    const { sender, ttl, proof_key, gasprice = 10000, content = '' } = params
     if (!privatekey || !sender) {
       throw `both privatekey and sender are required`
     }
     return this.tx.send(privatekey, {
       sender,
-      gasprice: 100,
+      gasprice,
       function: 'silas.ProofOfExistence.newByProofKey',
       args: {
         proof_key,
