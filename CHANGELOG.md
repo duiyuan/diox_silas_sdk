@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.38](https://github.com/duiyuan/diox_silas_sdk/compare/v0.2.37...v0.2.38) (2026-03-18)
+
+
+### Bug Fixes
+
+* update gasprice default value in NewProofParams and NewProofByProofHashParams ([7cc724e](https://github.com/duiyuan/diox_silas_sdk/commit/7cc724e81ea19c77aa61c43f77ea6980abbe505f))
+
 ### [0.2.37](https://github.com/duiyuan/diox_silas_sdk/compare/v0.2.36...v0.2.37) (2025-09-30)
 
 ### [0.2.36](https://github.com/duiyuan/diox_silas_sdk/compare/v0.2.35...v0.2.36) (2025-09-24)
